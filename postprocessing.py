@@ -93,6 +93,14 @@ class Plot_With_Slider:
         self.button = None
         self.scale = self._position_scale()
 
+        # whether show tx rx sliders
+        self.txbar_switch_off = False
+        if channel_dataset.shape[1] == 1:  # number of Tx port
+            self.txbar_switch_off = True
+        self.rxbar_switch_off = False
+        if channel_dataset.shape[2] == 1:  # number of Rx port
+            self.rxbar_switch_off = True
+
         self._init_figure()
 
     def _init_figure(self):
@@ -142,20 +150,26 @@ class Plot_With_Slider:
         self.fig.add_subplot(gs[16, 10:30])
         self.snapshot_slider = Slider(ax=plt.gca(), label='Idx_snapshot', valinit=1, valmin=1, valmax=num_snapshots,
                                       valstep=1, orientation='horizontal')
-        self.fig.add_subplot(gs[17, 10:30])
-        self.tx_slider = Slider(ax=plt.gca(), label='Idx_tx', valinit=1, valmin=1, valmax=self.channel.shape[1],
-                                valstep=1, orientation='horizontal')
-        self.fig.add_subplot(gs[18, 10:30])
-        self.rx_slider = Slider(ax=plt.gca(), label='Idx_rx', valinit=1, valmin=1, valmax=self.channel.shape[2],
-                                valstep=1, orientation='horizontal')
         self.snapshot_slider.on_changed(self.up_date)
-        self.tx_slider.on_changed(self.up_date)
-        self.rx_slider.on_changed(self.up_date)
+
+        if not self.txbar_switch_off:
+            self.fig.add_subplot(gs[17, 10:30])
+            self.tx_slider = Slider(ax=plt.gca(), label='Idx_tx', valinit=1, valmin=1, valmax=self.channel.shape[1],
+                                    valstep=1, orientation='horizontal')
+            self.tx_slider.on_changed(self.up_date)
+
+        if not self.rxbar_switch_off:
+            self.fig.add_subplot(gs[18, 10:30])
+            self.rx_slider = Slider(ax=plt.gca(), label='Idx_rx', valinit=1, valmin=1, valmax=self.channel.shape[2],
+                                    valstep=1, orientation='horizontal')
+            self.rx_slider.on_changed(self.up_date)
 
         # init reset button
         ax_reset = plt.axes([0.1, 0.2, 0.1, 0.05])
         self.button = Button(ax_reset, 'Reset', hovercolor='0.975')
         self.button.on_clicked(self.reset)
+
+        self.up_date(value=None)
 
     def _position_scale(self) -> float:
         """
@@ -180,8 +194,10 @@ class Plot_With_Slider:
         function for reset button
         """
         self.snapshot_slider.reset()
-        self.tx_slider.reset()
-        self.rx_slider.reset()
+        if not self.txbar_switch_off:
+            self.tx_slider.reset()
+        if not self.rxbar_switch_off:
+            self.rx_slider.reset()
 
     def up_date(self, value) -> None:
         """
@@ -192,9 +208,13 @@ class Plot_With_Slider:
         # update index
         idx_dict = {
             'idx_snapshot': self.snapshot_slider.val - 1,
-            'idx_rx': self.rx_slider.val - 1,
-            'idx_tx': self.tx_slider.val - 1
+            'idx_rx': 0,
+            'idx_tx': 0
         }
+        if not self.rxbar_switch_off:
+            idx_dict['idx_rx'] = self.rx_slider.val - 1
+        if not self.txbar_switch_off:
+            idx_dict['idx_tx'] = self.tx_slider.val - 1
 
         # update data
         update_channel, updata_gt, uav_position = self._slice_process_data(idx_dict)
