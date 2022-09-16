@@ -32,7 +32,7 @@ python postprocessing.py -c channel.h5 -t target.h5
 ```
 
 # License
-This dataset it licensed under the [Creative Commons Attribution Share Alike 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/) License.
+This dataset (and all remote files associated with it) is licensed under the [Creative Commons Attribution Share Alike 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/) License.
 
 To use this dataset and/or scripts or any modified part of them, cite:
 ```
