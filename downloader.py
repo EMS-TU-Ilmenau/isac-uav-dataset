@@ -2,32 +2,21 @@ import argparse
 from tqdm.auto import tqdm
 import requests
 import requests.exceptions
-import tempfile
 import tarfile
 import os
-import shutil
 import subprocess
 import pdb
 import logging
+from getpass import getpass
+from hashlib import sha256
 
 SERVER = "https://ftp.tu-ilmenau.de"
 DIR = "/hpc-private/ems1/test1/"
 SHASUM_FILE = "scenarios.checksum"
-LOCAL_DL_DIR = ".tmp"
 
 class Downloader:
     @classmethod
-    def download(cls, url: str, out_file: str, overwrite: bool = False):
-        if not overwrite:
-            if cls._check_if_already_downloaded(out_file):
-                logging.info(f"Reusing previously downloaded file { out_file }.")
-        else:
-            cls._download_scenario(url, out_file)
-
-        return
-    
-    @classmethod
-    def _download_scenario(cls, url: str, out_file: str) -> None:
+    def download(cls, url: str, out_file: str):
         if not cls._check_if_server_is_available(SERVER):
             raise ConnectionError("Unable to connect to server!")
         
@@ -64,9 +53,6 @@ class Downloader:
 
         return False
 
-    @staticmethod
-    def _check_if_already_downloaded(file: str) -> bool:
-        return os.path.exists(file)
 
     @staticmethod
     def _download_file_from_server(url: str, out_file: str) -> bool:
@@ -87,12 +73,13 @@ class Downloader:
 
         return True
 
-def decrypt_file(in_file: str, out_file: str = None) -> bool:
+
+def decrypt_file(in_file: str, password: str, out_file: str = None) -> bool:
     if out_file is None:
         out_file = in_file.split(".encrypted")[0]
 
     logging.info(f"Decrypting downloaded file {in_file} as {out_file}.")
-    proc = subprocess.run(["openssl", "enc", "-d", "-aes256", "-in", in_file, "-out", out_file])
+    proc = subprocess.run(["openssl", "enc", "-d", "-aes256", "-pass", f"pass:{password}", "-in", in_file, "-out", out_file])
 
     return not(bool(proc.returncode))
 
@@ -111,14 +98,18 @@ def unpack_file(archive: str, out_dir: str, file_to_unpack: str) -> bool:
     return
 
 def check_shasum(shasum: dict, h5_file: str, dir: str) -> bool:
-    logging.info(f"Checking Shasum using Repos `*.checksum` files to verify downloaded Scenario { h5_file }.")
-    proc = subprocess.run(["shasum", "--algorithm", "256", h5_file], cwd=dir, capture_output=True)
-    if shasum != proc.stdout.decode("utf-8").split("  ")[0]:
+    logging.info(f"Checking Shasum-256 using Repos `*.checksum` files to verify downloaded Scenario { h5_file }.")
+    hash_func = sha256()
+    with open(h5_file, "rb") as f:
+        for chunk in iter(lambda: f.read(2**23), b""):
+            hash_func.update(chunk)
+
+    hash = hash_func.hexdigest()
+    if shasum != hash:
         logging.warn(f"The shasums of the downloaded file and in the Gitlab did not match!")
         return False
 
-    logging.info("Compared shasum matched!")
-    
+    logging.info(f"Shasum-256 of {h5_file} and Shasum-256 in Git repository matched!")   
     return True
 
 def create_download_dir(dir: str) -> None:
@@ -141,45 +132,50 @@ def load_shasum_dict(shasum_file: str) -> dict:
 
     return shasums
 
-
 def main(args, shasums):
-    repo_dir = os.getcwd()
-    create_download_dir(dir=os.path.join(repo_dir, LOCAL_DL_DIR))
+    repo_dir = args.output_dir
+    tmp_dir = os.path.join(repo_dir, ".tmp")
+    create_download_dir(tmp_dir)
+    password = getpass("Please enter the password to decrypt the files:")
 
     for scenario in args.scenario:
         url = f"{SERVER}{ DIR }{scenario}.tar.bz2"
         # context manager deletes tmpdir when finished
-        with tempfile.TemporaryDirectory() as tmpdir:
-            encrypted_file = os.path.join(repo_dir, LOCAL_DL_DIR ,f"{ scenario }.tar.bz2.encrypted")
-            decrypted_file = os.path.join(tmpdir, f"{ scenario }.tar.bz2")
-            h5_filename = f"{ scenario }.h5"
-            shasum = shasums[h5_filename]
+        encrypted_file = os.path.join(tmp_dir ,f"{ scenario }.tar.bz2.encrypted")
+        decrypted_file = os.path.join(tmp_dir, f"{ scenario }.tar.bz2")
+        h5_filename = f"{ scenario }.h5"
+        shasum = shasums[h5_filename]
 
-            Downloader.download(url, out_file=encrypted_file, overwrite=args.overwrite)
+        if not os.path.exists(encrypted_file) or args.overwrite:
+            Downloader.download(url, out_file=encrypted_file)
+        else:
+            logging.info("Reusing previously downloaded file.")
 
-            # decrypt file in tmpdir
-            if not decrypt_file(in_file=encrypted_file, out_file=decrypted_file):
+        # decrypt file in tmpdir
+        if not os.path.exists(decrypted_file):
+            if not decrypt_file(in_file=encrypted_file, password=password, out_file=decrypted_file):
                 raise Exception(f"Failed to decrypt file. Did you enter the correct password?")
 
-            # unpack file from tmpdir to repodir
+        # unpack file from tmpdir to repodir
+        if not os.path.exists(os.path.join(repo_dir, h5_filename)):
             unpack_file(archive=decrypted_file, out_dir=repo_dir, file_to_unpack= h5_filename)
 
-            # check shasum of file with *.checksum file from repo
-            if not args.no_shasum:
-                check_shasum(shasum, h5_filename, repo_dir)
-            else: 
-                logging.warn(f"Skipping Shasum-check.")
+        # check shasum of file with *.checksum file from repo
+        if not args.no_shasum:
+            check_shasum(shasum, h5_filename, repo_dir)
+        else: 
+            logging.warn(f"Skipping Shasum-check.")
 
-    if not args.no_cleanup:
-        logging.info(f"Removing temporary download files.")
-        shutil.rmtree(os.path.join(repo_dir, LOCAL_DL_DIR))
+        if not args.no_cleanup:
+            os.remove(encrypted_file)
+            os.remove(decrypted_file)
     
+    if not args.no_cleanup:
+        os.rmdir(tmp_dir)
+
     logging.info("All done. Exiting.")
 
 if __name__ == "__main__":
-    shasums = load_shasum_dict(os.path.join(os.getcwd(), SHASUM_FILE))
-    scenarios = [ x.split(".h5")[0] for x in shasums.keys()]
-
     parser = argparse.ArgumentParser(
         description="Downloader for the Measurement files."
     )
@@ -188,8 +184,17 @@ if __name__ == "__main__":
         "--scenario",
         help=f"The list of scenarios to download, separated by spaces. If none is given, all scenarios are downloaded.",
         nargs="+",
-        default=scenarios,
     )
+    parser.add_argument(
+        "--output-dir",
+        help="Specify the output directory for the downloaded files. Default is the current working directory.",
+        default=os.getcwd(),
+    )
+    parser.add_argument(
+        "--shasum-file",
+        help="Path to the `scenarios.checksum` file. Defaults to `$cwd/scenarios.checksum`.",
+        default=os.path.join(os.getcwd(), "scenarios.checksum"),
+    )    
     parser.add_argument(
         "-nc",
         "--no-cleanup",
@@ -211,4 +216,14 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=logging.INFO)
     args = parser.parse_args()
+
+    if not os.path.exists(args.shasum_file):
+        raise FileNotFoundError(f"No shasum file found at path {args.shasum_file}. Use `--shasum-file` to specify a correct path.")
+
+    shasums = load_shasum_dict(args.shasum_file)
+    all_scenarios = [ x.split(".h5")[0] for x in shasums.keys()]
+
+    if args.scenario is None:
+        args.scenario = all_scenarios
+
     main(args, shasums)
