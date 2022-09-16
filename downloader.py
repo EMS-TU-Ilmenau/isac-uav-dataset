@@ -18,8 +18,8 @@ LOCAL_DL_DIR = ".tmp"
 class Downloader:
     @classmethod
     def download(cls, url: str, out_file: str, overwrite: bool = False):
-        if cls._check_if_already_downloaded(out_file):
-            if not overwrite:
+        if not overwrite:
+            if cls._check_if_already_downloaded(out_file):
                 logging.info(f"Reusing previously downloaded file { out_file }.")
         else:
             cls._download_scenario(url, out_file)
@@ -92,7 +92,6 @@ def decrypt_file(in_file: str, out_file: str = None) -> bool:
         out_file = in_file.split(".encrypted")[0]
 
     logging.info(f"Decrypting downloaded file {in_file} as {out_file}.")
-    # TODO: make an iteration for multiple user inputs
     proc = subprocess.run(["openssl", "enc", "-d", "-aes256", "-in", in_file, "-out", out_file])
 
     return not(bool(proc.returncode))
