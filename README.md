@@ -19,7 +19,7 @@ python downloader.py -s SCENARIO [SCENARIO_1, SCENARIO_2, ...]
 ```
 in this way you need to pass a list of desired scenarios.  
 
-After downloading you need to enter a password, then the files will be decrypted and unzipped in the main folder automatically.
+Before it starts to download, you need to enter a password, then the files will be downloaded, decrypted, and unzipped in the main folder automatically.
 For the password please contact anyone below:  
 steffen.schieler@tu-ilmenau.de  
 carsten.smeenk@tu-ilmenau.de  
