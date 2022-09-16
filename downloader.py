@@ -1,14 +1,40 @@
+#!/usr/bin/env python3
+"""Downloader for the Dataset files.
+
+This script is used to download the actual dataset files, which are stored on a different server to keep the repository clean.
+After being invoked, the script will perform the following tasks:
+    - download the specified scenarios
+    - decrypt the scenarios
+    - unpack the archive
+    - check the resulting file matches with the one specified in the repo (by comparing SHA256 hashes)
+
+If a file was already downloaded, the script will not download it again, unless specified otherwise with the `--overwrite` argument (the same holds true for decryption and unpacking).
+Call the script with `--help` to get a print of all supported arguments.
+For most use-cases, running 
+```bash
+python downloader.py
+```
+is sufficient.
+
+"""
 import argparse
-from tqdm.auto import tqdm
-import requests
-import requests.exceptions
-import tarfile
 import os
 import subprocess
-import pdb
 import logging
 from getpass import getpass
 from hashlib import sha256
+import tarfile
+import requests
+import requests.exceptions
+from tqdm.auto import tqdm
+
+__author__ = "steffen.schieler@tu-ilmenau.de, FG EMS"
+__credits__ = "Carsten Smeenk, Zhixiang Zhao"
+__version__ = "0.5"
+__license__ = "CC-BY-SA-4.0"
+__maintainer__ = "Steffen Schieler"
+__email__ = "steffen.schieler@tu-ilmenau.de"
+__status__ = "Development"
 
 SERVER = "https://ftp.tu-ilmenau.de"
 DIR = "/hpc-private/ems1/test1/"
