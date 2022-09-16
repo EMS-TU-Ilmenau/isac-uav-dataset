@@ -3,15 +3,16 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.gridspec import GridSpec
 from matplotlib.widgets import Slider, Button
+import argparse
+import logging
+import os
 
 
 class PostprocessBase:
     def __init__(self, channel_file_path: str, target_file_path):
         # load channel, positions
-        channel, groundtruth, positions = PostprocessBase.load_dataset(channel_file_path, target_file_path)
-
-        # init plot
-        self.slider_figure = Plot_With_Slider(channel_dataset=channel, groundtruth=groundtruth, positions=positions)
+        self.channel, self.groundtruth, self.positions = PostprocessBase.load_dataset(channel_file_path, target_file_path)
+        logging.info(f"-----Dataset loaded!-----")
 
     def show(self) -> None:
         """
@@ -19,6 +20,8 @@ class PostprocessBase:
         RUN THIS TO SHOW FIGURE !!
         ###########
         """
+        logging.info(f"-----Plotting!-----")
+        Plot_With_Slider(channel_dataset=self.channel, groundtruth=self.groundtruth, positions=self.positions)
         plt.show()
 
     @staticmethod
@@ -239,21 +242,34 @@ class Plot_With_Slider:
         return gt
 
 
-
 if __name__ == '__main__':
-    channel_file_path = 'D:\FTPserver\\1to2_H15_V11_channel.h5'
-    channel_file = h5py.File(channel_file_path)
-    uav_file_path = 'D:\FTPserver\\1to2_H15_V11_target.h5'
-    uav_file = h5py.File(uav_file_path)
-    print(channel_file.keys())
-    print(uav_file.keys())
-    print(channel_file['Channel/FrequencyResponses/Data'].shape)
+    parser = argparse.ArgumentParser(
+        description='Load and plot measurement dataset.'
+    )
+    parser.add_argument(
+        '-c',
+        '--channel',
+        help=f'Please give the name of channel dataset.',
+        nargs='+',
+        default=False
+    )
 
-    delay = channel_file['TargetParameters/Delay/Data']
-    doppler = channel_file['TargetParameters/Doppler/Data']
-    dataset = channel_file['Channel/FrequencyResponses/Data']
+    parser.add_argument(
+        '-t',
+        '--target',
+        help=f'Please give the name of target dataset.',
+        nargs='+',
+        default=False
+    )
+    logging.basicConfig(level=logging.INFO)
+    args = parser.parse_args()
+    print(args)
+    channel_path = os.path.join(os.getcwd(), args.channel[0])
+    target_path = os.path.join(os.getcwd(), args.target[0])
+    pp = PostprocessBase(channel_path, target_path)
+    pp.show()
 
-    process = PostprocessBase(channel_file_path, uav_file_path)
-    process.show()
+
+
 
 
