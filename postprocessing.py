@@ -229,7 +229,8 @@ class Plot_With_Slider:
         delay_doppler = self.groundtruth[int(idx_dict['idx_snapshot'] + 0.5) * self.window_len]
         Button(ax_window, 'Delay:{:.4}μs\nDoppler:{:.4}Hz'.format(delay_doppler[0] * 1e6, delay_doppler[1]))
 
-        self.fig.canvas.draw_idle()
+        # self.fig.canvas.draw_idle()
+        self.fig.canvas.draw()
 
     def _slice_process_data(self, idx: dict) -> np.ndarray:
         idx_snapshot = idx['idx_snapshot']
