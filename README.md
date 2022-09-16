@@ -30,3 +30,16 @@ You need to specify the name of '.h5' data files, which should be placed in the 
 ```
 python postprocessing.py -c channel.h5 -t target.h5
 ```
+
+# License
+This dataset it licensed under the [Creative Commons Attribution Share Alike 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/) License.
+
+To use this dataset and/or scripts or any modified part of them, cite:
+```
+@Article{FancyDataset2022,
+author = {Contributor 1, Contributor 2, ...},
+title = {Our Fancy Dataset},
+journal={See you on Scihub or Arxiv},
+year = {2022},
+url = {https://www.tu-ilmenau.de/ems},}
+```
