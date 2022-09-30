@@ -7,7 +7,7 @@ After being invoked, the script will perform the following tasks:
 
 class:
     - PostprocessBase: Load dataset, offer processing tools, define the window length in time axis.
-                        Method 'slice_channel(self, idx)' can slice the channel with a given idx. [idx_snapshot, idx_Tx. idx_Rx]
+                        Method 'slice_channel(self, idx)' can slice the channel with a given list of idx. -> [idx_snapshot, idx_Tx. idx_Rx]
 
     - Plot_With_Slider: - Act as a customized plot tool for 'PostprocessBase'.
                         - It builds 3 sliders for updating the plot, in terms of 'snapshot', 'Idx_tx', and 'Idx_rx'. The
@@ -338,7 +338,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '-s',
         '--slice',
-        help=f'Please give the list of index that you want to slice, should be in format [idx_snapshot, idx_Tx, idx_Rx]',
+        help=f'Please give the index that you want to slice',
         nargs='+',
     )
 
