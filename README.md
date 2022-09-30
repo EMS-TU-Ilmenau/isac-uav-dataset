@@ -19,11 +19,6 @@ python downloader.py -s SCENARIO [SCENARIO_1, SCENARIO_2, ...]
 ```
 in this way you need to pass a list of desired scenarios.  
 
-Calling for help is always an option when something is not clear.   
-```
-python downloader.py --help
-```
-
 After downloading you need to enter a password, then the files will be decrypted and unzipped in the main folder automatically.
 For the password please contact anyone below:  
 steffen.schieler@tu-ilmenau.de  
@@ -31,17 +26,11 @@ carsten.smeenk@tu-ilmenau.de
 zhixiang.zhao@tu-ilmenau.de  
 
 **Step 2: Plot**  
-You need to use '-p' and specify the name of '.h5' data files, which should be placed in the main folder, namely channel dataset and target dataset.  
+You need to specify the name of '.h5' data files, which should be placed in the main folder, namely channel dataset and target dataset.  
 ```
-python postprocessing.py -c channel.h5 -t target.h5 -p
+python postprocessing.py -c channel.h5 -t target.h5
 ```
 
-**Option: Slice the channel**  
-You can also slice the channel using '-s' by giving three idx  
-```
-python postprocessing.py -c channel.h5 -t target.h5 -s idx_snapshot idx_Tx idx_Rx
-
-```
 # License
 This dataset (and all remote files associated with it) is licensed under the [Creative Commons Attribution Share Alike 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/) License.
 
