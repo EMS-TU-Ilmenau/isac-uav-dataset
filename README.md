@@ -31,11 +31,17 @@ carsten.smeenk@tu-ilmenau.de
 zhixiang.zhao@tu-ilmenau.de  
 
 **Step 2: Plot**  
-You need to specify the name of '.h5' data files, which should be placed in the main folder, namely channel dataset and target dataset.  
+You need to use '-p' and specify the name of '.h5' data files, which should be placed in the main folder, namely channel dataset and target dataset.  
 ```
-python postprocessing.py -c channel.h5 -t target.h5
+python postprocessing.py -c channel.h5 -t target.h5 -p
 ```
 
+**Option: Slice the channel**  
+You can also slice the channel using '-s' by giving three idx  
+```
+python postprocessing.py -c channel.h5 -t target.h5 -s idx_snapshot idx_Tx idx_Rx
+
+```
 # License
 This dataset (and all remote files associated with it) is licensed under the [Creative Commons Attribution Share Alike 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/) License.
 

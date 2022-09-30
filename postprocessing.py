@@ -1,3 +1,26 @@
+""" Postprocessing and plot
+This script is used to postprocess and plot the dataset files, which should automatically downloaded and unzipped in the main folder!!
+After being invoked, the script will perform the following tasks:
+    - load the channel and position information
+    - plot the delay-Doppler map and relative positions of target, Tx, and Rx
+    - the plot can be updated by using sliders
+
+class:
+    - PostprocessBase: Load dataset, offer processing tools, define the window length in time axis.
+                        Method 'slice_channel(self, idx)' can slice the channel with a given idx. [idx_snapshot, idx_Tx. idx_Rx]
+
+    - Plot_With_Slider: - Act as a customized plot tool for 'PostprocessBase'.
+                        - It builds 3 sliders for updating the plot, in terms of 'snapshot', 'Idx_tx', and 'Idx_rx'. The
+                        sliders 'Idx_tx' and 'Idx_rx' only show up when the number of antenna port is more than 1.
+                        - The positions are normalized based on the biggest distance between target, Tx and Rx. Tx is
+                        selected as the center.
+
+How to use:
+    Just call the script and give the right filename, or instance the class 'PostprocessBase' and call '.show()'.
+
+(PS: currently the window length is set up to 1280, which is equal to the number of sub-carriers)
+
+"""
 import h5py
 import numpy as np
 from matplotlib import pyplot as plt
@@ -7,22 +30,41 @@ import argparse
 import logging
 import os
 
+__author__ = "zhixiang.zhao@tu-ilmenau.de, FG EMS"
+__credits__ = "Steffen Schieler, Carsten Smeenk"
+__email__ = "zhixiang.zhao@tu-ilmenau.de"
+__status__ = "Development"
+
 
 class PostprocessBase:
     def __init__(self, channel_file_path: str, target_file_path):
         # load channel, positions
         self.channel, self.groundtruth, self.positions = PostprocessBase.load_dataset(channel_file_path, target_file_path)
         logging.info(f"-----Dataset loaded!-----")
+        logging.info(f"Totally have {self.channel.shape[0] // self.time_window_len(1)} snapshots")
+        logging.info(f"Totally have {self.channel.shape[1]} Tx ports")
+        logging.info(f"Totally have {self.channel.shape[2]} Rx ports")
 
     def show(self) -> None:
         """
-        ###########
-        RUN THIS TO SHOW FIGURE !!
-        ###########
+        function for showing the figure
         """
         logging.info(f"-----Plotting!-----")
         Plot_With_Slider(channel_dataset=self.channel, groundtruth=self.groundtruth, positions=self.positions)
         plt.show()
+
+    def slice_channel(self, idx):
+        window_len = self.time_window_len(1)
+        number_snapshots = self.channel.shape[0] // window_len
+        idx_snapshot = int(idx[0]) - 1
+        idx_Tx = int(idx[1]) - 1
+        idx_Rx = int(idx[2]) - 1
+
+        if idx_snapshot >= number_snapshots or idx_Tx >= self.channel.shape[1] or idx_Tx >= self.channel.shape[2]:
+            logging.warning(f'Index out of range')
+        else:
+            channel_slice = self.channel[idx_snapshot * window_len:(idx_snapshot + 1) * window_len, idx_Tx, idx_Rx, :].T
+            return channel_slice
 
     @staticmethod
     def fft(data: np.ndarray) -> np.ndarray:
@@ -35,7 +77,7 @@ class PostprocessBase:
     @staticmethod
     def time_window_len(resolution: float) -> int:
         """
-
+        todo: for a given resolution calculate the window length
         :param resolution: define a resolution, then based on this calculate the corresponding window length
         :return: window_len: int
         """
@@ -143,12 +185,14 @@ class Plot_With_Slider:
         plt.xlim((0, 1))
         plt.ylim((0, 1))
         plt.legend(handles=[self.plt_uav_posi, plt_tx_posi, plt_rx_posi], labels=['Target', 'Tx', 'Rx'], loc='best')
-        plt.title('Position map (Top view)')
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.title('Position map (Top view, normalized)')
 
         # ------------------------------ Sliders and reset button ------------------------------
-        num_snapshots = self.channel.shape[0] // self.window_len
         self.fig.add_subplot(gs[16, 10:30])
-        self.snapshot_slider = Slider(ax=plt.gca(), label='Idx_snapshot', valinit=1, valmin=1, valmax=num_snapshots,
+        self.snapshot_slider = Slider(ax=plt.gca(), label='Idx_snapshot', valinit=1, valmin=1,
+                                      valmax=self.channel.shape[0] // self.window_len,
                                       valstep=1, orientation='horizontal')
         self.snapshot_slider.on_changed(self.up_date)
 
@@ -271,25 +315,43 @@ if __name__ == '__main__':
         '-c',
         '--channel',
         help=f'Please give the name of channel dataset.',
-        nargs='+',
-        default=False
+        default=False,
+        nargs='+'
     )
 
     parser.add_argument(
         '-t',
         '--target',
         help=f'Please give the name of target dataset.',
-        nargs='+',
+        default=False,
+        nargs='+'
+    )
+
+    parser.add_argument(
+        '-p',
+        '--plot',
+        help=f'Plot',
+        action='store_true',
         default=False
     )
+
+    parser.add_argument(
+        '-s',
+        '--slice',
+        help=f'Please give the list of index that you want to slice, should be in format [idx_snapshot, idx_Tx, idx_Rx]',
+        nargs='+',
+    )
+
     logging.basicConfig(level=logging.INFO)
     args = parser.parse_args()
-    print(args)
-    channel_path = os.path.join(os.getcwd(), args.channel[0])
-    target_path = os.path.join(os.getcwd(), args.target[0])
-    pp = PostprocessBase(channel_path, target_path)
-    pp.show()
 
+    pp = PostprocessBase(os.path.join(os.getcwd(), args.channel[0]), os.path.join(os.getcwd(), args.target[0]))
+
+    if args.slice is not None:
+        print(pp.slice_channel(args.slice))
+
+    if args.plot:
+        pp.show()
 
 
 
