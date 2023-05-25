@@ -164,18 +164,12 @@ def main(args, checksums):
                 unpack_file(archive=decrypted_file, out_dir=repo_dir, file_to_unpack=h5_file)
 
         # check shasum of file with *.checksum file from repo
-        if not args.no_shasum:
-            for shasum, h5_file in zip(shasums, h5_filenames):
-                check_shasum(shasum, h5_file, repo_dir)
-        else: 
-            logger.warning(f"Skipping Shasum-check.")
+        for shasum, h5_file in zip(shasums, h5_filenames):
+            check_shasum(shasum, h5_file, repo_dir)
 
         if not args.no_cleanup:
             os.remove(encrypted_file)
             os.remove(decrypted_file)
-    
-    if not args.no_cleanup:
-        os.rmdir(tmp_dir)
 
     logger.info("All done. Exiting.")
 
@@ -203,12 +197,6 @@ if __name__ == "__main__":
         "-nc",
         "--no-cleanup",
         help="Do not delete temporary download files after succesful decryption and unpacking.",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-ns",
-        "--no-shasum",
-        help="Do not check whether the downloaded file is correct w.r.t. the Shasum defined in the Git repository. WARNING: Disabling is potentially dangerous!",
         action="store_true",
     )
     parser.add_argument(
