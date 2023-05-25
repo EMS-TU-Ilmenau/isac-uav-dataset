@@ -39,6 +39,28 @@ SERVER = "https://resdata.tu-ilmenau.de"
 DIR = "/public/ems1/test1/"
 SHASUM_FILE = "scenarios.checksum"
 
+class CustomFormatter(logging.Formatter):
+    grey = "\x1b[38;20m"
+    yellow = "\x1b[33;20m"
+    red = "\x1b[31;20m"
+    bold_red = "\x1b[31;1m"
+    reset = "\x1b[0m"
+    format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
+
+    FORMATS = {
+        logging.DEBUG: grey + format + reset,
+        logging.INFO: grey + format + reset,
+        logging.WARNING: yellow + format + reset,
+        logging.ERROR: red + format + reset,
+        logging.CRITICAL: bold_red + format + reset
+    }
+
+    def format(self, record):
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
+    
+
 class Downloader:
     @classmethod  
     def download(cls, url: str, out_file: str):
@@ -65,20 +87,20 @@ def decrypt_file(in_file: str, password: str, out_file: str = None) -> bool:
     if out_file is None:
         out_file = in_file.split(".encrypted")[0]
 
-    logging.info(f"Decrypting downloaded file {in_file} as {out_file}.")
+    logger.info(f"Decrypting downloaded file {in_file} as {out_file}.")
     proc = subprocess.run(["openssl", "enc", "-d", "-aes256", "-pbkdf2", "-pass", f"pass:{password}", "-in", in_file, "-out", out_file])
 
     return not(bool(proc.returncode))
 
 def unpack_file(archive: str, out_dir: str, file_to_unpack: str) -> bool:
-    logging.info(f"Unpacking file { file_to_unpack } from archive { archive } to { out_dir }.")
+    logger.info(f"Unpacking file { file_to_unpack } from archive { archive } to { out_dir }.")
     with tarfile.open(archive, mode="r") as tf:
         tf.extract(member=file_to_unpack, path=out_dir)
 
     return
 
 def check_shasum(shasum: dict, h5_file: str, dir: str) -> bool:
-    logging.info(f"Checking Shasum-256 using Repos `*.checksum` files to verify downloaded Scenario { h5_file }.")
+    logger.info(f"Checking Shasum-256 using Repos `*.checksum` files to verify downloaded Scenario { h5_file }.")
     hash_func = sha256()
     with open(h5_file, "rb") as f:
         for chunk in iter(lambda: f.read(2**23), b""):
@@ -86,18 +108,18 @@ def check_shasum(shasum: dict, h5_file: str, dir: str) -> bool:
 
     hash = hash_func.hexdigest()
     if shasum != hash:
-        logging.warning(f"The shasums of the downloaded file and in the Gitlab did not match!")
+        logger.warning(f"The shasums of the downloaded file and in the Gitlab did not match!")
         return False
 
-    logging.info(f"Shasum-256 of {h5_file} and Shasum-256 in Git repository matched!")   
+    logger.info(f"Shasum-256 of {h5_file} and Shasum-256 in Git repository matched!")   
     return True
 
 def create_download_dir(dir: str) -> None:
     try: 
         os.mkdir(dir)
-        logging.info(f"Temporary download directory created in `{ dir }`.")
+        logger.info(f"Temporary download directory created in `{ dir }`.")
     except FileExistsError:
-        logging.info(f"Temporary download directory already exists.")
+        logger.info(f"Temporary download directory already exists.")
 
     return
 
@@ -129,7 +151,7 @@ def main(args, checksums):
         if not os.path.exists(encrypted_file) or args.overwrite:
             Downloader.download(url, out_file=encrypted_file)
         else:
-            logging.info("Reusing previously downloaded file.")
+            logger.info("Reusing previously downloaded file.")
 
         # decrypt file in tmpdir
         if not os.path.exists(decrypted_file):
@@ -146,7 +168,7 @@ def main(args, checksums):
             for shasum, h5_file in zip(shasums, h5_filenames):
                 check_shasum(shasum, h5_file, repo_dir)
         else: 
-            logging.warning(f"Skipping Shasum-check.")
+            logger.warning(f"Skipping Shasum-check.")
 
         if not args.no_cleanup:
             os.remove(encrypted_file)
@@ -155,7 +177,7 @@ def main(args, checksums):
     if not args.no_cleanup:
         os.rmdir(tmp_dir)
 
-    logging.info("All done. Exiting.")
+    logger.info("All done. Exiting.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -196,8 +218,16 @@ if __name__ == "__main__":
         action="store_true",
     )
 
-    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger("Data-Downloader")
+    logger.setLevel(logging.INFO)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    ch.setFormatter(CustomFormatter())    
     args = parser.parse_args()
+    
+    # create console handler with a higher log level
+
+    logger.addHandler(ch)
 
     if not os.path.exists(args.shasum_file):
         raise FileNotFoundError(f"No shasum file found at path {args.shasum_file}. Use `--shasum-file` to specify a correct path.")
