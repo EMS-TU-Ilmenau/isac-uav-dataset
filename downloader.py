@@ -24,8 +24,7 @@ import logging
 from getpass import getpass
 from hashlib import sha256
 import tarfile
-import requests
-import requests.exceptions
+import urllib.request
 from tqdm.auto import tqdm
 
 __author__ = "steffen.schieler@tu-ilmenau.de, FG EMS"
@@ -36,66 +35,28 @@ __maintainer__ = "Steffen Schieler"
 __email__ = "steffen.schieler@tu-ilmenau.de"
 __status__ = "Development"
 
-SERVER = "https://ftp.tu-ilmenau.de"
-DIR = "/hpc-private/ems1/test1/"
+SERVER = "https://resdata.tu-ilmenau.de"
+DIR = "/public/ems1/test1/"
 SHASUM_FILE = "scenarios.checksum"
 
 class Downloader:
-    @classmethod
+    @classmethod  
     def download(cls, url: str, out_file: str):
-        if not cls._check_if_server_is_available(SERVER):
-            raise ConnectionError("Unable to connect to server!")
-        
-        logging.info(f"Connection to Server { SERVER } established.")
-
-        if not cls._check_if_file_exists_on_server(url):
-            raise FileNotFoundError("File not found on server!")
-        
-        logging.info(f"Found file under URL on `{ url }`.")
-
         if not cls._download_file_from_server(url, out_file=out_file):
             raise Exception(f"Failed to download file { url } from server.")
 
         return
 
-    @staticmethod
-    def _check_if_server_is_available(url: str) -> bool:
-        try:
-            r = requests.get(url)
-            r.raise_for_status()
-            return True
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            logging.error("Server is unreachable!")
-        except requests.exceptions.HTTPError:
-            logging.error(f"Encountered HTTP-Errors 4xx or 5xx")
+    @classmethod
+    def _download_file_from_server(cls, url: str, out_file: str) -> bool:
+        class DownloadProgressBar(tqdm):
+            def update_to(self, b=1, bsize=1, tsize=None):
+                if tsize is not None:
+                    self.total = tsize
+                self.update(b * bsize - self.n)  
         
-        return False
-
-    @staticmethod
-    def _check_if_file_exists_on_server(url: str) -> bool:
-        file_head = requests.head(url)
-        if file_head is not None:
-            return True
-
-        return False
-
-
-    @staticmethod
-    def _download_file_from_server(url: str, out_file: str) -> bool:
-        response = requests.get(url, stream=True)  # Streaming, so we can show a progress bar.
-        total_size_in_bytes= int(response.headers.get('content-length', 0))
-        block_size = 1024 #1 KiB
-        progress_bar = tqdm(total=total_size_in_bytes, unit='iB', unit_scale=True, desc=f"Downloading { url }")
-        with open(out_file, 'wb') as file:
-            for data in response.iter_content(block_size):
-                progress_bar.update(len(data))
-                file.write(data)
-        
-        progress_bar.close()
-
-        if total_size_in_bytes != 0 and progress_bar.n != total_size_in_bytes:
-            logging.error("Something went wrong while downloading the file.")
-            return False
+        with DownloadProgressBar(unit='B', unit_scale=True, miniters=1, desc=url.split('/')[-1]) as t:
+            urllib.request.urlretrieve(url, filename=out_file, reporthook=t.update_to)
 
         return True
 
@@ -105,7 +66,7 @@ def decrypt_file(in_file: str, password: str, out_file: str = None) -> bool:
         out_file = in_file.split(".encrypted")[0]
 
     logging.info(f"Decrypting downloaded file {in_file} as {out_file}.")
-    proc = subprocess.run(["openssl", "enc", "-d", "-aes256", "-pass", f"pass:{password}", "-in", in_file, "-out", out_file])
+    proc = subprocess.run(["openssl", "enc", "-d", "-aes256", "-pbkdf2", "-pass", f"pass:{password}", "-in", in_file, "-out", out_file])
 
     return not(bool(proc.returncode))
 
@@ -165,7 +126,7 @@ def main(args, shasums):
     password = getpass("Please enter the password to decrypt the files:")
 
     for scenario in args.scenario:
-        url = f"{SERVER}{ DIR }{scenario}.tar.bz2"
+        url = f"{SERVER}{ DIR }{scenario}.tar.bz2.encrypted"
         # context manager deletes tmpdir when finished
         encrypted_file = os.path.join(tmp_dir ,f"{ scenario }.tar.bz2.encrypted")
         decrypted_file = os.path.join(tmp_dir, f"{ scenario }.tar.bz2")
@@ -179,6 +140,7 @@ def main(args, shasums):
 
         # decrypt file in tmpdir
         if not os.path.exists(decrypted_file):
+            import pdb; pdb.set_trace()
             if not decrypt_file(in_file=encrypted_file, password=password, out_file=decrypted_file):
                 raise Exception(f"Failed to decrypt file. Did you enter the correct password?")
 
