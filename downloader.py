@@ -73,14 +73,7 @@ def decrypt_file(in_file: str, password: str, out_file: str = None) -> bool:
 def unpack_file(archive: str, out_dir: str, file_to_unpack: str) -> bool:
     logging.info(f"Unpacking file { file_to_unpack } from archive { archive } to { out_dir }.")
     with tarfile.open(archive, mode="r") as tf:
-        # TODO: Uncomment the below
-        # tf.extract(member=file_to_unpack, path=out_dir)
-        # TODO: REMOVE THE BELOW
-        tf.extract(member="some_crazy_measurement/some_crazy_measurement_file.h5", path=out_dir,)
-
-    os.replace(os.path.join(os.getcwd(), "some_crazy_measurement/some_crazy_measurement_file.h5",), os.path.join(os.getcwd(), file_to_unpack))
-    os.rmdir(os.path.join(os.getcwd(), "some_crazy_measurement"))
-    # TODO: STOP REMOVE
+        tf.extract(member=file_to_unpack, path=out_dir)
 
     return
 
@@ -93,7 +86,7 @@ def check_shasum(shasum: dict, h5_file: str, dir: str) -> bool:
 
     hash = hash_func.hexdigest()
     if shasum != hash:
-        logging.warn(f"The shasums of the downloaded file and in the Gitlab did not match!")
+        logging.warning(f"The shasums of the downloaded file and in the Gitlab did not match!")
         return False
 
     logging.info(f"Shasum-256 of {h5_file} and Shasum-256 in Git repository matched!")   
@@ -119,7 +112,7 @@ def load_shasum_dict(shasum_file: str) -> dict:
 
     return shasums
 
-def main(args, shasums):
+def main(args, checksums):
     repo_dir = args.output_dir
     tmp_dir = os.path.join(repo_dir, ".tmp")
     create_download_dir(tmp_dir)
@@ -130,8 +123,8 @@ def main(args, shasums):
         # context manager deletes tmpdir when finished
         encrypted_file = os.path.join(tmp_dir ,f"{ scenario }.tar.bz2.encrypted")
         decrypted_file = os.path.join(tmp_dir, f"{ scenario }.tar.bz2")
-        h5_filename = f"{ scenario }.h5"
-        shasum = shasums[h5_filename]
+        h5_filenames = [f"{ scenario }_{ type }.h5" for type in ["channel", "target"]]
+        shasums = [checksums[x] for x in h5_filenames]
 
         if not os.path.exists(encrypted_file) or args.overwrite:
             Downloader.download(url, out_file=encrypted_file)
@@ -140,19 +133,20 @@ def main(args, shasums):
 
         # decrypt file in tmpdir
         if not os.path.exists(decrypted_file):
-            import pdb; pdb.set_trace()
             if not decrypt_file(in_file=encrypted_file, password=password, out_file=decrypted_file):
                 raise Exception(f"Failed to decrypt file. Did you enter the correct password?")
 
         # unpack file from tmpdir to repodir
-        if not os.path.exists(os.path.join(repo_dir, h5_filename)):
-            unpack_file(archive=decrypted_file, out_dir=repo_dir, file_to_unpack= h5_filename)
+        for h5_file in h5_filenames:
+            if not os.path.exists(os.path.join(repo_dir, h5_file)):
+                unpack_file(archive=decrypted_file, out_dir=repo_dir, file_to_unpack=h5_file)
 
         # check shasum of file with *.checksum file from repo
         if not args.no_shasum:
-            check_shasum(shasum, h5_filename, repo_dir)
+            for shasum, h5_file in zip(shasums, h5_filenames):
+                check_shasum(shasum, h5_file, repo_dir)
         else: 
-            logging.warn(f"Skipping Shasum-check.")
+            logging.warning(f"Skipping Shasum-check.")
 
         if not args.no_cleanup:
             os.remove(encrypted_file)
@@ -209,7 +203,7 @@ if __name__ == "__main__":
         raise FileNotFoundError(f"No shasum file found at path {args.shasum_file}. Use `--shasum-file` to specify a correct path.")
 
     shasums = load_shasum_dict(args.shasum_file)
-    all_scenarios = [ x.split(".h5")[0] for x in shasums.keys()]
+    all_scenarios = [ x.split("_channel.h5")[0] for x in shasums.keys() if "_channel.h5" in x]
 
     if args.scenario is None:
         args.scenario = all_scenarios
