@@ -43,14 +43,18 @@ python postprocessing.py -c channel.h5 -t target.h5 -s idx_snapshot idx_Tx idx_R
 
 ```
 # License
-This dataset (and all remote files associated with it) is licensed under the [Creative Commons Attribution Share Alike 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/) License.
+This dataset (and all remote files associated with it) is licensed under the [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode) License.
 
 To use this dataset and/or scripts or any modified part of them, cite:
 ```
-@Article{FancyDataset2022,
-author = {Contributor 1, Contributor 2, ...},
-title = {Our Fancy Dataset},
-journal={See you on Scihub or Arxiv},
-year = {2022},
-url = {https://www.tu-ilmenau.de/ems},}
+@INPROCEEDINGS{10133118,
+  author={Beuster, Julia and Andrich, Carsten and Döbereiner, Michael and Schieler, Steffen and Engelhardt, Maximilian and Schneider, Christian and Thomä, Reiner},
+  booktitle={2023 17th European Conference on Antennas and Propagation (EuCAP)}, 
+  title={Measurement Testbed for Radar and Emitter Localization of UAV at 3.75 GHz}, 
+  year={2023},
+  volume={},
+  number={},
+  pages={1-5},
+  doi={10.23919/EuCAP57121.2023.10133118}
+}
 ```
