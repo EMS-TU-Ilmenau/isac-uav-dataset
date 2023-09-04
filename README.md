@@ -55,9 +55,11 @@ To use this dataset and/or scripts or any modified part of them, cite:
   booktitle={2023 17th European Conference on Antennas and Propagation (EuCAP)}, 
   title={Measurement Testbed for Radar and Emitter Localization of UAV at 3.75 GHz}, 
   year={2023},
-  volume={},
-  number={},
   pages={1-5},
   doi={10.23919/EuCAP57121.2023.10133118}
 }
 ```
+
+The paper is available on [IEEEXplore](https://ieeexplore.ieee.org/document/10133118) and [Arxiv](https://arxiv.org/abs/2210.07168).
+
+Please cite the IEEEXplore paper if you use the dataset for your publication.
