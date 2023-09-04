@@ -1,6 +1,9 @@
-# dataset-demo
+# ISAC UAV Dataset
 
-Demo repository for sharing of a dataset.
+Contains scripts and code demo to work with the ISAC UAV Dataset from the EMS Group at TU Ilmenau.
+Please note that due to large filesizes of the dataset, this repository does not contain the actual dataset.
+Instead, the files are downloaded by the code in this repository. 
+Below, we outline the download process and provide a simple demo for the dataset.
 
 ## Getting started
 
