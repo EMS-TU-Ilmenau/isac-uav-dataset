@@ -26,7 +26,7 @@ class UAVDataset:
     def __post_init__(self) -> None:
         # load channel, positions
         h5_channel = h5py.File(self.channelfile, "r")
-        self.channel = np.array(h5_channel[H5_CDATA])
+        self.channel = np.array(h5_channel[H5_CDATA]).squeeze()
         self.groundtruth = np.concatenate(
             (
                 np.array(h5_channel[H5_TARGET_DELAY]),
@@ -34,13 +34,13 @@ class UAVDataset:
             ),
             axis=1,
         )
-        self.tx = np.array(h5_channel[H5_TXANTENNA])
-        self.rx = np.array(h5_channel[H5_RXANTENNA])
+        self.tx = np.array(h5_channel[H5_TXANTENNA]).squeeze()
+        self.rx = np.array(h5_channel[H5_RXANTENNA]).squeeze()
         
         if self.targetfile is not None:
             h5_target = h5py.File(self.targetfile, "r")
-            self.uav = np.array(h5_target[H5_UAVPOSITIONS])
-                    
+            self.uav = np.array(h5_target[H5_UAVPOSITIONS]).squeeze()
+        
         return
 
     def __str__(self) -> str:
