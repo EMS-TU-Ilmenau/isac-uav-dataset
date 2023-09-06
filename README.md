@@ -114,9 +114,8 @@ class TorchDataset(Dataset):
         return str(self.dataset)
 ```
 
-
+To create a `DataLoader`` with complex baseband and delay-doppler groundtruth, e.g., use:
 ```python
-# Dataloader with complex baseband and delay-doppler groundtruth
 dataset = UAVDataset(channel_file)
 dataloader = DataLoader(
   TorchDataset(dataset), 
@@ -125,8 +124,8 @@ dataloader = DataLoader(
 )
 ```
 
+To create a `DataLoader`` with complex baseband, delay-doppler groundtruth, and UAV positions, e.g., use:
 ```python
-# Dataloader with complex baseband, delay-doppler groundtruth, and UAV positions
 dataset = UAVDataset(channel_file, target_file)
 dataloader = DataLoader(
   TorchDataset(dataset, return_uavpos=True), 
