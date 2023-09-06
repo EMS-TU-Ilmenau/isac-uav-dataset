@@ -152,7 +152,7 @@ python postprocessing.py -c channel.h5 -t target.h5 -s idx_snapshot idx_Tx idx_R
 This dataset (and all remote files associated with it) is licensed under the [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode) License.
 
 To use this dataset and/or scripts or any modified part of them, cite:
-```
+```tex
 @INPROCEEDINGS{10133118,
   author={Beuster, Julia and Andrich, Carsten and Döbereiner, Michael and Schieler, Steffen and Engelhardt, Maximilian and Schneider, Christian and Thomä, Reiner},
   booktitle={2023 17th European Conference on Antennas and Propagation (EuCAP)}, 
