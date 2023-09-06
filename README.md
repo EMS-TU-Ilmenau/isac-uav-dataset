@@ -29,6 +29,8 @@ Clone this repository using the following command:
 git clone https://github.com/EMS-TU-Ilmenau/isac-uav-dataset.git
 ```
 
+![Cloning the repository](./.media/demo_clone.gif)
+
 ### Step 2: Download
 The `downloader.py` takes care of the download, decryption, unpacking, and verification of files.
 Shasum hashes for the files in the `scenarions.shasums` also provide a way to track changes of the provided dataset files for the users (via the history of `scenarions.shasums`).
@@ -40,6 +42,8 @@ python downloader.py
 which will bring you into default mode.
 In this case, all scenarios will be downloaded.
 **Caution** This can take up a large amount of space on your hard drive.
+
+![Cloning the repository](./.media/demo_downloader.gif)
 
 Alternatively, you can also specify scenarios with:  
 ```
