@@ -8,6 +8,7 @@ __author__ = "steffen.schieler@tu-ilmenau.de, FG EMS"
 __credits__ = "Zhixiang Zhao, Carsten Smeenk"
 __all__ = ["Dataset"]
 
+# For an explanation of the following, see the PDF description in the repository
 H5_CDATA = "Channel/FrequencyResponses/Data"
 H5_TARGET_DELAY = "TargetParameters/Delay/Data"
 H5_TARGET_DOPPLER = "TargetParameters/Doppler/Data"
@@ -18,15 +19,21 @@ H5_UAVPOSITIONS = "Positions/Data"
 @dataclass
 class UAVDataset:
     channelfile: str
+    """The path to the channel file"""
     targetfile: str = None
+    """The path to the target file"""
     channel: np.ndarray = field(init=False)
+    """Property to store the channel data as a numpy array"""
     groundtruth: np.ndarray = field(init=False)
+    """Property to store the delay and Doppler groundtruth of the UAV as a numpy array"""
     tx: np.ndarray = field(init=False)
+    """Property to store the transmitter antenna positions as a numpy array"""
     rx: np.ndarray = field(init=False)
+    """Property to store the receiver antenna positions as a numpy array"""
     uav: np.ndarray = field(init=False)
+    """Property to store the UAV positions as a numpy array"""
     
     def __post_init__(self) -> None:
-        # load channel, positions
         h5_channel = h5py.File(self.channelfile, "r")
         self.channel = np.array(h5_channel[H5_CDATA]).squeeze()
         self.groundtruth = np.concatenate(
@@ -64,6 +71,14 @@ class UAVDataset:
 
 class TorchDataset(Dataset):
     def __init__(self, dataset: UAVDataset, t_window: int = 100, return_uavpos: bool = False):
+        """Torch Dataset for UAV Channel Data
+
+        Args:
+            dataset (UAVDataset): An instance of `UAVDataset`
+            t_window (int, optional): The length of the slow-time window. Defaults to 100.
+            return_uavpos (bool, optional): Whether to return the RTK UAV position. Defaults to False.
+
+        """        
         self.dataset = dataset
         self.t_window = t_window
         self.return_uavpos = return_uavpos

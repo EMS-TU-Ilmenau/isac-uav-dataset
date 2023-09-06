@@ -16,12 +16,19 @@ H5_UAVPOSITIONS = "Positions/Data"
 @dataclass
 class UAVDataset:
     channelfile: str
+    """The path to the channel file"""
     targetfile: str = None
+    """The path to the target file"""
     channel: np.ndarray = field(init=False)
+    """Property to store the channel data as a numpy array"""
     groundtruth: np.ndarray = field(init=False)
+    """Property to store the delay and Doppler groundtruth of the UAV as a numpy array"""
     tx: np.ndarray = field(init=False)
+    """Property to store the transmitter antenna positions as a numpy array"""
     rx: np.ndarray = field(init=False)
+    """Property to store the receiver antenna positions as a numpy array"""
     uav: np.ndarray = field(init=False)
+    """Property to store the UAV positions as a numpy array"""
     
     def __post_init__(self) -> None:
         # load channel, positions
