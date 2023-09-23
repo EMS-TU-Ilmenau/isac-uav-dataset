@@ -118,7 +118,7 @@ class TorchDataset(Dataset):
         return str(self.dataset)
 ```
 
-To create a `DataLoader`` with complex baseband and delay-doppler groundtruth, e.g., use:
+To create a `DataLoader` with complex baseband and delay-doppler groundtruth, e.g., use:
 ```python
 dataset = UAVDataset(channel_file)
 dataloader = DataLoader(
@@ -128,7 +128,7 @@ dataloader = DataLoader(
 )
 ```
 
-To create a `DataLoader`` with complex baseband, delay-doppler groundtruth, and UAV positions, e.g., use:
+To create a `DataLoader` with complex baseband, delay-doppler groundtruth, and UAV positions, e.g., use:
 ```python
 dataset = UAVDataset(channel_file, target_file)
 dataloader = DataLoader(
@@ -141,13 +141,13 @@ dataloader = DataLoader(
 Check the provided file `snippets/torch_dataset.py` to learn more about the available options.
 
 ### Example 3: Plotting Delay-Doppler Map with UAV Groundtruth (RADAR)
-You need to use '-p' and specify the '.h5' data files, namely channel dataset and target dataset, which should be placed in the main folder.    
+You need to use `-p` and specify the `.h5` data files, namely channel dataset and target dataset, which should be placed in the main folder.    
 ```
 python postprocessing.py -c channel.h5 -t target.h5 -p
 ```
 
 **Optional: Slice the channel**  
-You can also slice the channel using '-s' by giving three idx: idx_snapshot idx_Tx idx_Rx
+You can also slice the channel using `-s` by giving three idx: idx_snapshot idx_Tx idx_Rx
 ```
 python postprocessing.py -c channel.h5 -t target.h5 -s idx_snapshot idx_Tx idx_Rx
 ```
