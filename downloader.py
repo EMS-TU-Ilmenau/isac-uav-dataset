@@ -214,7 +214,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     # create console handler with a higher log level
-
     logger.addHandler(ch)
 
     if not os.path.exists(args.shasum_file):
