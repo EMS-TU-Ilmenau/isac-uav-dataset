@@ -39,6 +39,8 @@ SERVER = "https://resdata.tu-ilmenau.de"
 DIR = "/public/ems1/test1/"
 SHASUM_FILE = "scenarios.checksum"
 
+RXS = ["VGH0", "VGH1", "VGH2"]
+
 class CustomFormatter(logging.Formatter):
     grey = "\x1b[38;20m"
     yellow = "\x1b[33;20m"
@@ -82,6 +84,12 @@ class Downloader:
 
         return True
 
+def add_rx_to_scenarios(scenarios: list) -> list:
+    allrx = []
+    for scenario in scenarios:
+        allrx.extend([f"{scenario}_{rx}" for rx in RXS])
+        
+    return allrx
 
 def decrypt_file(in_file: str, password: str, out_file: str = None) -> bool:
     if out_file is None:
@@ -224,5 +232,7 @@ if __name__ == "__main__":
 
     if args.scenario is None:
         args.scenario = all_scenarios
+    else:
+        args.scenario = add_rx_to_scenarios(args.scenario)
 
     main(args, shasums)
