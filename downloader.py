@@ -36,7 +36,7 @@ __email__ = "steffen.schieler@tu-ilmenau.de"
 __status__ = "Development"
 
 SERVER = "https://resdata.tu-ilmenau.de"
-DIR = "/public/ems1/test1/"
+DIR = "/public/ei/ems/isac-uav-dataset/"
 SHASUM_FILE = "scenarios.checksum"
 
 RXS = ["VGH0", "VGH1", "VGH2"]
@@ -149,8 +149,7 @@ def main(args, checksums):
     password = getpass("Please enter the password to decrypt the files:")
 
     for scenario in args.scenario:
-        url = f"{SERVER}{ DIR }{scenario}.tar.bz2.encrypted"
-        # context manager deletes tmpdir when finished
+        url = f"{SERVER}{DIR}{scenario}.tar.bz2.encrypted"
         encrypted_file = os.path.join(tmp_dir ,f"{ scenario }.tar.bz2.encrypted")
         decrypted_file = os.path.join(tmp_dir, f"{ scenario }.tar.bz2")
         h5_filenames = [f"{ scenario }_{ type }.h5" for type in ["channel", "target"]]
