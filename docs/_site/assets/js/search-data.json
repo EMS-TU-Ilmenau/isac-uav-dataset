@@ -1,0 +1,177 @@
+{"0": {
+    "doc": "Getting started",
+    "title": "Getting Started",
+    "content": "Hello and welcome to the ISAC UAV Dataset from Technische Universität Ilmenau. This page will help you get started with the dataset and provide you with some useful information. Before downloading the dataset, we want to familiarize you with the structure of the dataset and the provided files. Please read this section carefully to avoid wasting your costly time in premature self-exploratory efforts. ",
+    "url": "/gettingstarted/#getting-started",
+    
+    "relUrl": "/gettingstarted/#getting-started"
+  },"1": {
+    "doc": "Getting started",
+    "title": "Dataset organization",
+    "content": "The dataset is organized in scenarios. Each scenario contains a series of complex-baseband, time-variant channel transfer functions $H(f,t)$ recorded at three receivers (Rx). Files that contain sampled transfer-functions use the _channel.h5 suffix. In addition to the channel transfer functions, the groundtruth position of the UAV is provided in an additional file. Files that contain sampled transfer-functions use the _target.h5 suffix. Hence, each scenario consists of six files: . | 1 file for each Rx (3 in total) | 3 identical target files (1 for each Rx) | . The redundant copies of the target files are provided in case only a single Rx is studied. For security purposes, the dataset is currently encrypted. To obtain the password required for the encryption, pleas drop us a short email and state where you are from and how you want to make use of the dataset. A really brief explanation is sufficient :) . ",
+    "url": "/gettingstarted/#dataset-organization",
+    
+    "relUrl": "/gettingstarted/#dataset-organization"
+  },"2": {
+    "doc": "Getting started",
+    "title": "Preparations",
+    "content": "In its current state, the dataset contains 60 different scenarios in 360 files. The total required disk space is about 200 GB. As Git is not suitable (at least not without extensions) to store such large datasets, the dataset is stored on a different server at TU Ilmenau. The repository provides a script downloader.py to download the dataset from the server. We tried to keep the requirements minimal, but in case you experience any issues please check the requirements.txt file in the repository. You can run python -m pip install -r requirements.txt from the repository root to install the required packages. ",
+    "url": "/gettingstarted/#preparations",
+    
+    "relUrl": "/gettingstarted/#preparations"
+  },"3": {
+    "doc": "Getting started",
+    "title": "Downloading the dataset",
+    "content": "Clone this repository using the following command: . git clone https://github.com/EMS-TU-Ilmenau/isac-uav-dataset.git . The downloader.py script provides a command-line interface to download the dataset. It takes care of the download, decryption, unpacking, and verification of files. Shasum hashes for the files in the scenarions.shasums also provide a way to track changes of the provided dataset files for the users (via the history of scenarions.shasums). To download all available files, simply run the downloader.py script without any arguments: . python downloader.py . which will bring you into default mode. In this case, all available scenarios will be downloaded. The full dataset consumes about 200 GB of disk space. Correspondingly, the time required to download all scenarios will depend on your internet connection. When working with a remote machine, we recommend a screen or tmux session. Alternatively, you can also specify scenarios with: . python downloader.py --scenario SCENARIO_1 SCENARIO_2 ... SCENARIO_N . Pass the desired scenarios separated by spaces, e.g., . python downloader.py --scenario 1to2_H15_V11 2to3_H15_V11 . To see all available options run: . python downloader.py --help . If you entered a wrong password downloader.py, just re-run the script. In this case, it will not re-download the file and instead access the previously downloaded version stored in the .tmp folder. ",
+    "url": "/gettingstarted/#downloading-the-dataset",
+    
+    "relUrl": "/gettingstarted/#downloading-the-dataset"
+  },"4": {
+    "doc": "Getting started",
+    "title": "Getting started",
+    "content": " ",
+    "url": "/gettingstarted/",
+    
+    "relUrl": "/gettingstarted/"
+  },"5": {
+    "doc": "Data Format",
+    "title": "Data Format",
+    "content": "The measurement files are stored in H5 file format. For each scenario there are two files. The channel file includes the channel frequency response and the estimated delay and Doppler of the target, together with the positions of the receiver antennas. The target file includes the localization information (position, velocity, and acceleration) from an on-board RTK receiver. The timestamps of the data are available in both files as metadata. In order to distinguish between different scenarios and and also simplify accessing the UAV routes the measurement files are cropped into smaller files that hold to the following naming convention: . &lt;Start Point [int]&gt; to &lt;End Point [int]&gt; _H &lt;Height [m]&gt; _V&lt;Target velocity [m/s]&gt;.h5 . The values for Start Point and End Point are illustrated on the trajectory map below. The velocity stated in the scenario name is not the actual velocity of the UAV, but rather the maximum velocity of the target UAV. Use the groundtruth files to check the RTK measured velocity at all available snapshots. ",
+    "url": "/dataformat/",
+    
+    "relUrl": "/dataformat/"
+  },"6": {
+    "doc": "Data Format",
+    "title": "Data Structure",
+    "content": "The structure of the *.h5 files is illustrated in the following figures. For programmatic examples how to read the files, please refer to Examples. ",
+    "url": "/dataformat/#data-structure",
+    
+    "relUrl": "/dataformat/#data-structure"
+  },"7": {
+    "doc": "Data Format",
+    "title": "Channel File Structure",
+    "content": ". ",
+    "url": "/dataformat/#channel-file-structure",
+    
+    "relUrl": "/dataformat/#channel-file-structure"
+  },"8": {
+    "doc": "Data Format",
+    "title": "Target File Structure",
+    "content": ". ",
+    "url": "/dataformat/#target-file-structure",
+    
+    "relUrl": "/dataformat/#target-file-structure"
+  },"9": {
+    "doc": "Data Format",
+    "title": "Available Scenarios",
+    "content": "In general, each scenario was flown at a height of 15 m and 30 m and at a maximum velocity of 5 m/s and 11 m/s. Here is a full list of all available scenarios. The names in the list can also be used to query the scenarios in the downloader.py. | h=15 m, v=5m/s | h=15 m, v=11m/s | h=30 m, v=5m/s | h=30 m, v=11m/s | . | 0to1_H15_V5 | 1to2_H15_V11 | 1to2_H30_V5 | 1to0_H30_V11 | . | 0to9_H15_V5 | 2to1_H15_V11 | 2to1_H30_V5 | 1to2_H30_V11 | . | 1to2_H15_V5 | 2to3_H15_V11 | 2to3_H30_V5 | 2to1_H30_V11 | . | 2to1_H15_V5 | 3to2_H15_V11 | 3to2_H30_V5 | 2to3_H30_V11 | . | 2to3_H15_V5 | 3to4_H15_V11 | 3to4_H30_V5 | 3to2_H30_V11 | . | 3to2_H15_V5 | 4to3_H15_V11 | 4to3_H30_V5 | 3to4_H30_V11 | . | 3to4_H15_V5 | 4to5_H15_V11 | 4to5_H30_V5 | 4to3_H30_V11 | . | 4to3_H15_V5 | 5to4_H15_V11 | 5to4_H30_V5 | 4to5_H30_V11 | . | 4to5_H15_V5 | 5to6_H15_V11 | 5to6_H30_V5 | 5to4_H30_V11 | . | 5to4_H15_V5 | 6to5_H15_V11 | 6to5_H30_V5 | 5to6_H30_V11 | . | 5to6_H15_V5 | 6to7_H15_V11 | 6to7_H30_V5 | 6to5_H30_V11 | . | 6to5_H15_V5 | 7to6_H15_V11 | 7to6_H30_V5 | 6to7_H30_V11 | . | 6to7_H15_V5 | 7to8_H15_V11 | 7to8_H30_V5 | 7to6_H30_V11 | . | 7to6_H15_V5 | 8to7_H15_V11 | 8to7_H30_V5 | 7to8_H30_V11 | . | 7to8_H15_V5 |   |   | 8to7_H30_V11 | . | 8to7_H15_V5 |   |   |   | . ",
+    "url": "/dataformat/#available-scenarios",
+    
+    "relUrl": "/dataformat/#available-scenarios"
+  },"10": {
+    "doc": "Code Examples",
+    "title": "Examples and Tutorials",
+    "content": "Welcome to the Examples Section! Here, we provide practical Python code snippets to help you seamlessly navigate and utilize the Dataset for your ISAC-related projects. These examples are designed to be straightforward and easy to follow, serving as a solid starting point for your experimentation. All examples shown here are available in the repository under snippets/. ",
+    "url": "/examples/#examples-and-tutorials",
+    
+    "relUrl": "/examples/#examples-and-tutorials"
+  },"11": {
+    "doc": "Code Examples",
+    "title": "How to use the dataset",
+    "content": "We provide two examples how to work with the dataset in the snippets folder. | snippets/load_example.py demonstrates how to load the dataset from the *.h5 files into Python. It provides a Dataset-class that can also be used in other scripts. | snippets/torch_dataset.py demonstrates how to use the Dataset-class to create a PyTorch Dataset for training a neural network. | snippets/delay_doppler_plot.py demonstrates how to use the Dataset-class to plot a Delay-Doppler Map with the groundtruth of the UAV position. | . Example 1: Working with *.h5 . The provided UAVDataset-class can be used to load the dataset from the *.h5 files into Python. channel_file = \"1to2_H15_V11_VGH0_channel.h5\" target_file = \"1to2_H15_V11_VGH0_target.h5\" dataset = UAVDataset(channel_file, target_file) print(dataset) . Available properties are: . | dataset.channel: The channel dataset as a numpy.ndarray of shape (n_snapshots, n_freq). | dataset.groundtruth: The target groundtruth (delay, Doppler) as a numpy.ndarray of shape (n_snapshots, 2). | dataset.tx: Position of the Tx antenna (numpy.ndarray) with shape (1, 3). | dataset.rx: Position of the Rx antenna (numpy.ndarray) with shape (1, 3). | dataset.uav: Position of the UAV (numpy.ndarray) with shape (n_snapshots, 3). | . Check the implementation of the class in snippets/load_example.py to learn more about the available properties. Example 2: Creating a PyTorch Dataset . The provided UAVDataset-class can be used to create a PyTorch Dataset for training a neural network. class TorchDataset(Dataset): def __init__(self, dataset: UAVDataset, t_window: int = 100, return_uavpos: bool = False): self.dataset = dataset self.t_window = t_window self.return_uavpos = return_uavpos if return_uavpos and self.dataset.uav is None: raise ValueError(\"UAV Positions not loaded!\") return def __getitem__(self, idx: int) -&gt; [torch.Tensor, torch.Tensor]: if self.return_uavpos: return ( torch.from_numpy(self.dataset.channel[idx: idx + self.t_window]), torch.from_numpy(self.dataset.groundtruth[idx + self.t_window // 2]), torch.from_numpy(self.dataset.uav[idx + self.t_window // 2]) ) else: return ( torch.from_numpy(self.dataset.channel[idx: idx + self.t_window]), torch.from_numpy(self.dataset.groundtruth[idx + self.t_window // 2]), ) def __len__(self) -&gt; int: return len(self.dataset)- self.t_window//2 def __str__(self) -&gt; str: return str(self.dataset) . To create a DataLoader with complex baseband and delay-doppler groundtruth, e.g., use: . dataset = UAVDataset(channel_file) dataloader = DataLoader( TorchDataset(dataset), batch_size=16, shuffle=True, ) . To create a DataLoader with complex baseband, delay-doppler groundtruth, and UAV positions, e.g., use: . dataset = UAVDataset(channel_file, target_file) dataloader = DataLoader( TorchDataset(dataset, return_uavpos=True), batch_size=16, shuffle=True, ) . Check the provided file snippets/torch_dataset.py to learn more about the available options. Example 3: Plotting Delay-Doppler Map with UAV Groundtruth (RADAR) . You need to use -p and specify the .h5 data files, namely channel dataset and target dataset, which should be placed in the main folder. python postprocessing.py -c channel.h5 -t target.h5 -p . Optional: Slice the channel You can also slice the channel using -s by giving three idx: idx_snapshot idx_Tx idx_Rx . python postprocessing.py -c channel.h5 -t target.h5 -s idx_snapshot idx_Tx idx_Rx . ",
+    "url": "/examples/#how-to-use-the-dataset",
+    
+    "relUrl": "/examples/#how-to-use-the-dataset"
+  },"12": {
+    "doc": "Code Examples",
+    "title": "Code Examples",
+    "content": " ",
+    "url": "/examples/",
+    
+    "relUrl": "/examples/"
+  },"13": {
+    "doc": "Measurement",
+    "title": "Measurement Campaign",
+    "content": "This site introduces the measurement campaign that was conducted to obtain the measurement data for the ISAC dataset. We focus on the details relevant to the dataset and refer to [1] for a more detailed description of the measurement setup. ",
+    "url": "/measurement/#measurement-campaign",
+    
+    "relUrl": "/measurement/#measurement-campaign"
+  },"14": {
+    "doc": "Measurement",
+    "title": "Measurement Impressions",
+    "content": "Flight area for the measurement in Ilmenau, Germany. ",
+    "url": "/measurement/#measurement-impressions",
+    
+    "relUrl": "/measurement/#measurement-impressions"
+  },"15": {
+    "doc": "Measurement",
+    "title": "Hardware and Signal Parameters",
+    "content": "The following signal parameters were used in the Software-Defined-Radios (SDRs). During the measurement, a single transmitter would send a contniuous, OFDM-like signal, that is captured by the three receivers VGH0, VGH1, and VGH2. All antennas were placed on the roof of an urban building, with the UAV flying in the vicinity of the building. The data RadioLab Rx is currently not part of the dataset. | Parameter | Value | . | Center Frequency | 3.75 GHz | . | Sampling Rate Tx | 100 MSPS | . | Sampling Rate Rx | 100 MSPS | . | Bandwidth | 80 MHz | . | Symbol Length | 16 \\(\\mu s\\) | . | Subcarriers (used/total) | 1280/1600 | . Below are the antenna positions for the measurement campaign. The position of each Rx antenna was measured with the RTK receiver over a period of at leat 1 minute, recording ~ 600 positions. To obtain the positions below, the first and last 100 values were discarded and the remaining values were averaged. |   | VGH0 | VGH1 | VGH2 | . | Latitude [deg] | 50.693345516466685 | 50.69341057007242 | 50.69360674942051 | . | Longitude [deg] | 10.936996650225382 | 10.936834788086342 | 10.936350730986371 | . | Height [mm] | 565181.7282539684 | 565180.4359331481 | 565349.6034090916 | . | rel. Pos. East [cm] | -11917.87336507936 | -13061.664401114216 | -16482.21163636364 | . | rel. Pos. North [cm] | 123842.51892063505 | 124566.28231197789 | 126748.91054545464 | . | rel. Pos. Down [cm] | -5276.027650793646 | -5275.735403899723 | -5292.143045454549 | . ",
+    "url": "/measurement/#hardware-and-signal-parameters",
+    
+    "relUrl": "/measurement/#hardware-and-signal-parameters"
+  },"16": {
+    "doc": "Measurement",
+    "title": "Groundtruth",
+    "content": "To evaluate the localization results, the groundtruth position of the UAV is recorded with a u-blox ZED-F9P RTK dual-band GNSS receiver. Since all of the positions of the antennas and the target is measured using RTK methods the locations are reported in N/E/D or E/N/U coordinate system with the position of the SAPOS base station as the reference. The used SAPOS base station is located at (WGS-84) . - 50.681024198 deg N, - 10.934963069 deg E, - 550.2006 m . References . [1] - Measurement Testbed for Radar and Emitter Localization of UAV at 3.75 GHz, Julia Beuster, Carsten Andrich, Michael Döbereiner, Steffen Schieler, Maximilian Engelhardt, Christian Schneider, and Reiner Thomä, 17th European Conference on Antennas and Propagation (EuCAP), 2023, DOI: 10.23919/EuCAP57121.2023.10133118 . ",
+    "url": "/measurement/#groundtruth",
+    
+    "relUrl": "/measurement/#groundtruth"
+  },"17": {
+    "doc": "Measurement",
+    "title": "Measurement",
+    "content": " ",
+    "url": "/measurement/",
+    
+    "relUrl": "/measurement/"
+  },"18": {
+    "doc": "Citation & References",
+    "title": "Citation",
+    "content": "Please make sure to give proper references when you use the dataset in your own work. The provided dataset, consisting of the measurement files and metadata, and all of the contents of the Github repository are licensed under the CC BY-NC-ND 4.0. To use this dataset and/or scripts or any modified part of them, cite: . @INPROCEEDINGS{10133118, author={Beuster, Julia and Andrich, Carsten and Döbereiner, Michael and Schieler, Steffen and Engelhardt, Maximilian and Schneider, Christian and Thomä, Reiner}, booktitle={2023 17th European Conference on Antennas and Propagation (EuCAP)}, title={Measurement Testbed for Radar and Emitter Localization of UAV at 3.75 GHz}, year={2023}, pages={1-5}, doi={10.23919/EuCAP57121.2023.10133118} } . ",
+    "url": "/references/#citation",
+    
+    "relUrl": "/references/#citation"
+  },"19": {
+    "doc": "Citation & References",
+    "title": "References",
+    "content": "Here is a collection of references that use this dataset. Want to add your own work? Please let us know and we will add you right away! . ",
+    "url": "/references/#references",
+    
+    "relUrl": "/references/#references"
+  },"20": {
+    "doc": "Citation & References",
+    "title": "Citation & References",
+    "content": " ",
+    "url": "/references/",
+    
+    "relUrl": "/references/"
+  },"21": {
+    "doc": "About",
+    "title": "Who are we?",
+    "content": "We from the Electronic Measurements and Signal Processing Group at Fakultät für Elektrotechnik und Informationstechnik, Technische Universität Ilmenau, Germany. You can learn more about us at our official website. ",
+    "url": "/about/#who-are-we",
+    
+    "relUrl": "/about/#who-are-we"
+  },"22": {
+    "doc": "About",
+    "title": "Questions, Comments, Suggestions?",
+    "content": "We are always open to discuss issues, comments, and questions regarding the dataset. If you found an issue with the code or provided examples, please just open an issue on the GitHub repository. Otherwise, feel free to contact us via email. We are looking forward to hearing from you! . ",
+    "url": "/about/#questions-comments-suggestions",
+    
+    "relUrl": "/about/#questions-comments-suggestions"
+  },"23": {
+    "doc": "About",
+    "title": "Credits",
+    "content": "Favicon provided by twemoji . ",
+    "url": "/about/#credits",
+    
+    "relUrl": "/about/#credits"
+  },"24": {
+    "doc": "About",
+    "title": "About",
+    "content": "This site is still under construction. ",
+    "url": "/about/",
+    
+    "relUrl": "/about/"
+  }
+}
