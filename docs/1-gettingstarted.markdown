@@ -19,7 +19,7 @@ Please read this section carefully to avoid wasting your costly time in prematur
 
 ## Dataset organization
 The dataset is organized in `scenarios`.
-Each scenario contains a series of complex-baseband, time-variant channel transfer functions $H(f,t)$ recorded at three receivers (Rx). 
+Each scenario contains a series of complex-baseband, time-variant channel transfer functions $$H(f,t)$$ recorded at three receivers (Rx). 
 Files that contain sampled transfer-functions use the `_channel.h5` suffix.
 
 In addition to the channel transfer functions, the groundtruth position of the UAV is provided in an additional file. 
@@ -31,7 +31,9 @@ Hence, each scenario consists of six files:
 {: .note}
 The redundant copies of the target files are provided in case only a single Rx is studied.  
 
-For security purposes, the dataset is currently encrypted. 
+{: .important} 
+For security purposes, the dataset is currently encrypted.  
+
 To obtain the password required for the encryption, pleas [drop us a short email](mailto:steffen.schieler@tu-ilmenau.de) and state where you are from and how you want to make use of the dataset.
 A really brief explanation is sufficient :)
 
