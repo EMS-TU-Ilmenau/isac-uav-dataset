@@ -5,7 +5,7 @@
 layout: home
 nav_order: 1
 ---
-![](./assets/impressions/banner.jpg)
+![](/assets/impressions/banner.jpg)
 
 We proudly present the 
 # ISAC UAV Dataset

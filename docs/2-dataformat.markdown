@@ -20,7 +20,7 @@ In order to distinguish between different scenarios and and also simplify access
 `<Start Point [int]> to <End Point [int]> _H <Height [m]> _V<Target velocity [m/s]>.h5`
 
 The values for `Start Point` and `End Point` are illustrated on the trajectory map below.
-![Map with Start and End points of measurements.](./assets/hovering.png)
+![Map with Start and End points of measurements.](/assets/hovering.png)
 
 {: .info}
 The velocity stated in the scenario name is not the actual velocity of the UAV, but rather the maximum velocity of the target UAV.
@@ -32,10 +32,10 @@ The structure of the `*.h5` files is illustrated in the following figures.
 For programmatic examples how to read the files, please refer to [Examples](/3-examples.markdown).
 
 ## Channel File Structure
-![H5 Channel File Structure](./assets/treeview-2.png)
+![H5 Channel File Structure](/assets/treeview-2.png)
 
 ## Target File Structure
-![H5 Target File Structure](./assets/treeview-3.png)
+![H5 Target File Structure](/assets/treeview-3.png)
 
 
 # Available Scenarios  
