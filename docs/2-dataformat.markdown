@@ -64,3 +64,9 @@ The names in the list can also be used to query the scenarios in the `downloader
 | 7to6_H15_V5    | 8to7_H15_V11    | 8to7_H30_V5    | 7to8_H30_V11    |
 | 7to8_H15_V5    |                 |                | 8to7_H30_V11    |
 | 8to7_H15_V5    |                 |                |                 |
+
+# Applied Preprocessing Steps
+To obtain the $$H(f,t)$$ snapshots in the dataset, a few preprocessing steps have been applied. 
+
+{: .warning}
+Under construction
