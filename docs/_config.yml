@@ -33,6 +33,7 @@ plugins:
 favicon_ico: "/assets/favicon_32.png"
 
 math: mathjax
+enable_copy_code_button: true
 
 nav_external_links:
   - title: GitHub Repo
