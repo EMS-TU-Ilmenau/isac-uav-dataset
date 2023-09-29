@@ -11,7 +11,7 @@ nav_order: 3
 
 Welcome to the Examples Section! Here, we provide practical Python code snippets to help you seamlessly navigate and utilize the Dataset for your ISAC-related projects. These examples are designed to be straightforward and easy to follow, serving as a solid starting point for your experimentation.
 
-{: .new}
+{: .note}
 All examples shown here are available in the repository under [`snippets/`](https://github.com/EMS-TU-Ilmenau/isac-uav-dataset/tree/main/snippets).
 
 

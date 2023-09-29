@@ -46,10 +46,7 @@ callouts:
     color: red
   important:
     title: Important
-    color: purple
+    color: blue
   note:
     title: Note
-    color: blue
-  new:
-    title: New
     color: green

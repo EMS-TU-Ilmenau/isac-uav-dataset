@@ -32,5 +32,5 @@ To use this dataset and/or scripts or any modified part of them, cite:
 
 Here is a collection of references that use this dataset. 
 
-{: .new}
+{: .note}
 Want to add your own work? Please [let us know](mailto:steffen.schieler@tu-ilmenau.de) and we will add you right away!

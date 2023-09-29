@@ -88,6 +88,6 @@ To see all available options run:
 python downloader.py --help
 ```
 
-{: .new}
+{: .note}
 If you entered a wrong password `downloader.py`, just re-run the script. In this case, it will not re-download the file and instead access the previously downloaded version stored in the `.tmp` folder.
 
