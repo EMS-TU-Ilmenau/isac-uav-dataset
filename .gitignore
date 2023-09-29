@@ -3,3 +3,4 @@
 *.tar.bz2.encrypted
 *.h5
 .vscode
+**/_site
