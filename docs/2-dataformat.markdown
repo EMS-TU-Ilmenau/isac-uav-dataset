@@ -19,8 +19,9 @@ In order to distinguish between different scenarios and and also simplify access
 
 `<Start Point [int]> to <End Point [int]> _H <Height [m]> _V<Target velocity [m/s]>.h5`
 
-The values for `Start Point` and `End Point` are illustrated on the trajectory map below.
-![Map with Start and End points of measurements.](../assets/hovering.png)
+The values for `Start Point` and `End Point` are illustrated on the interactive trajectory map below.
+Click the markers to see a label and description.
+<iframe width="100%" height="300px" frameborder="0" allowfullscreen allow="geolocation" src="//umap.openstreetmap.fr/en/map/untitled-map_966648?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=undefined&captionBar=false&captionMenus=true"></iframe><p><a href="//umap.openstreetmap.fr/en/map/untitled-map_966648?scaleControl=false&miniMap=false&scrollWheelZoom=true&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=undefined&captionBar=false&captionMenus=true">See full screen</a></p>
 
 {: .info}
 The velocity stated in the scenario name is not the actual velocity of the UAV, but rather the maximum velocity of the target UAV.
