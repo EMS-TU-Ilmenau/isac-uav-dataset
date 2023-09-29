@@ -15,7 +15,7 @@ We focus on the details relevant to the dataset and refer to [1] for a more deta
 
 # Measurement Impressions
 Flight area for the measurement in Ilmenau, Germany.
-![Flight Area](/assets/impressions/flight_area.jpg)
+![Flight Area](./assets/impressions/flight_area.jpg)
 
 
 # Hardware and Signal Parameters
@@ -24,7 +24,7 @@ The following signal parameters were used in the Software-Defined-Radios (SDRs).
 During the measurement, a single transmitter would send a contniuous, OFDM-like signal, that is captured by the three receivers VGH0, VGH1, and VGH2.
 All antennas were placed on the roof of an urban building, with the UAV flying in the vicinity of the building.
 
-![alt text](/assets/fhg-antenna.png)
+![Antenna Placement on FhG building](./assets/fhg-antenna.png)
 
 {: .note}
 The data **RadioLab** Rx is currently not part of the dataset.

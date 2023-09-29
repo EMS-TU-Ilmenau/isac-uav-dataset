@@ -53,7 +53,7 @@ Clone this repository using the following command:
 git clone https://github.com/EMS-TU-Ilmenau/isac-uav-dataset.git
 ```
 
-![Cloning the repository](/assets/demo_clone.gif)
+![Cloning the repository](./assets/demo_clone.gif)
 
 The `downloader.py` script provides a command-line interface to download the dataset.
 It takes care of the download, decryption, unpacking, and verification of files.
@@ -70,7 +70,7 @@ In this case, all available scenarios will be downloaded.
 The full dataset consumes about 200 GB of disk space. Correspondingly, the time required to download all scenarios will depend on your internet connection. When working with a remote machine, we recommend a `screen` or `tmux` session.
 
 
-![Cloning the repository](/assets/demo_downloader.gif)
+![Cloning the repository](./assets/demo_downloader.gif)
 
 Alternatively, you can also specify scenarios with:  
 ```
