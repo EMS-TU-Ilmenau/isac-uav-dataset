@@ -41,7 +41,7 @@ A really brief explanation is sufficient :)
 
 In its current state, the dataset contains 60 different scenarios in 360 files. 
 The total required disk space is about 200 GB.
-As Git is not suitable (at least not without extensions) to store such large datasets, the dataset is stored on a different server at TU Ilmenau.
+As Git is not suitable (at least not without extensions) to store such large datasets, the dataset is stored on a different server at TU Ilmenau [1].
 The repository provides a script `downloader.py` to download the dataset from the server. 
 
 ![Repository Structure](../assets/repository_structure.png)
@@ -94,3 +94,9 @@ python downloader.py --help
 {: .note}
 If you entered a wrong password `downloader.py`, just re-run the script. In this case, it will not re-download the file and instead access the previously downloaded version stored in the `.tmp` folder.
 
+
+{: .fs-3}  
+**Footnote**
+
+{: .fs-2}
+[1] - We want to thank Henning Schwanbeck from the Technische Universität Ilmenau Rechenzentrum for his continuous support with the provisioning of the measurement files.
