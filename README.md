@@ -1,5 +1,9 @@
 # ISAC UAV Dataset
 
+A full, interactive documentation for the dataset is available [here](https://ems-tu-ilmenau.github.io/isac-uav-dataset/)!
+
+## Introduction
+
 Contains scripts and code demo to work with the ISAC UAV Dataset from the EMS Group at TU Ilmenau.
 Please note that due to large filesizes of the dataset, this repository does not contain the actual dataset.
 Instead, the files are downloaded by the code in this repository. 
@@ -11,7 +15,7 @@ If the decryption fails due to an invalid password, please run the download scri
 
 To get the password, drop us a short email with your name, affiliation, and a short explanation how you want to use the dataset:
 - [steffen.schieler@tu-ilmenau.de](mailto:steffen.schieler@tu-ilmenau.de?subject=[ISAV-UAV-Dataset]) 
-- [reza.faramarzahangari@tu-ilmenau.de](mailto:reza.faramarzahangari@tu-ilmenau.de?subject=[ISAV-UAV-Dataset)
+- [reza.faramarzahangari@tu-ilmenau.de](mailto:reza.faramarzahangari@tu-ilmenau.de?subject=[ISAV-UAV-Dataset])
 
 
 ## Downloading the dataset
