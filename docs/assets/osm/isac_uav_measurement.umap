@@ -1,0 +1,363 @@
+{
+  "type": "umap",
+  "uri": "https://umap.openstreetmap.fr/en/map/isac-uav-measurement_966648#18/50.69263/10.93664",
+  "properties": {
+    "easing": false,
+    "embedControl": true,
+    "fullscreenControl": true,
+    "searchControl": true,
+    "datalayersControl": true,
+    "zoomControl": true,
+    "permanentCreditBackground": true,
+    "slideshow": {},
+    "captionMenus": true,
+    "captionBar": false,
+    "limitBounds": {},
+    "overlay": {},
+    "tilelayer": {},
+    "licence": "",
+    "description": "Map with the fly routes of the UAV target in the ISAC-UAV measurement campaign. \nCheck the GitHub repo for the data:\nhttps://github.com/EMS-TU-Ilmenau/isac-uav-dataset",
+    "name": "ISAC-UAV-Measurement",
+    "displayPopupFooter": false,
+    "miniMap": false,
+    "moreControl": true,
+    "scaleControl": true,
+    "scrollWheelZoom": true,
+    "zoom": 17
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      10.935092568397522,
+      50.69369160002285
+    ]
+  },
+  "layers": [
+    {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "_umap_options": {
+              "color": "Red"
+            },
+            "name": "Flight Route 1",
+            "description": "This is order of flight route 1. The scenarios are split along the points. "
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                10.937083,
+                50.693134
+              ],
+              [
+                10.936605,
+                50.693192
+              ],
+              [
+                10.935087,
+                50.693698
+              ],
+              [
+                10.934942,
+                50.693522
+              ],
+              [
+                10.936981,
+                50.692866
+              ],
+              [
+                10.936648,
+                50.692465
+              ],
+              [
+                10.934642,
+                50.693138
+              ],
+              [
+                10.93432,
+                50.692737
+              ],
+              [
+                10.936342,
+                50.692071
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "P0",
+            "description": "Take-Off / Landing Point",
+            "_umap_options": {
+              "iconClass": "Ball"
+            }
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              10.937075,
+              50.69314
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "P1",
+            "_umap_options": {
+              "iconClass": "Ball"
+            }
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              10.936593,
+              50.693199
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "P2",
+            "_umap_options": {
+              "iconClass": "Ball"
+            }
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              10.935084,
+              50.693692
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "P3",
+            "_umap_options": {
+              "iconClass": "Ball"
+            }
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              10.934949,
+              50.693524
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "P4",
+            "_umap_options": {
+              "iconClass": "Ball"
+            }
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              10.936977,
+              50.69287
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "P5",
+            "_umap_options": {
+              "iconClass": "Ball"
+            }
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              10.936656,
+              50.692464
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "P6",
+            "_umap_options": {
+              "iconClass": "Ball"
+            }
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              10.934639,
+              50.693131
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "P7",
+            "_umap_options": {
+              "iconClass": "Ball"
+            }
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              10.934314,
+              50.692736
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "P8",
+            "_umap_options": {
+              "iconClass": "Ball"
+            }
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              10.936338,
+              50.692076
+            ]
+          }
+        }
+      ],
+      "_umap_options": {
+        "displayOnLoad": true,
+        "browsable": true,
+        "editMode": "advanced",
+        "id": 2971629,
+        "permissions": {
+          "edit_status": 0
+        },
+        "remoteData": {},
+        "name": "Flight Route Set 1",
+        "description": "The perpendicular routes in front of the FhG building."
+      }
+    },
+    {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "_umap_options": {
+              "color": "Red"
+            },
+            "name": "Flight Route Set 2",
+            "description": "This is the seconds flight route and the connection between splitting points. The shown trajectory is only schematic."
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                10.937083,
+                50.693141
+              ],
+              [
+                10.934744,
+                50.691078
+              ],
+              [
+                10.930721,
+                50.691965
+              ],
+              [
+                10.932598,
+                50.692584
+              ],
+              [
+                10.934444,
+                50.692638
+              ],
+              [
+                10.935903,
+                50.692529
+              ],
+              [
+                10.936739,
+                50.693267
+              ],
+              [
+                10.937072,
+                50.693141
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "P0",
+            "description": "Take-Off/Landing Point",
+            "_umap_options": {
+              "iconClass": "Ball"
+            }
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              10.937075,
+              50.69314
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "P9",
+            "_umap_options": {
+              "iconClass": "Ball"
+            }
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              10.934738,
+              50.691078
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "P10",
+            "_umap_options": {
+              "iconClass": "Ball"
+            }
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              10.930716,
+              50.691965
+            ]
+          }
+        }
+      ],
+      "_umap_options": {
+        "displayOnLoad": true,
+        "browsable": true,
+        "editMode": "advanced",
+        "remoteData": {},
+        "name": "Flight Route Set 2",
+        "description": "The long-range routes.",
+        "id": 2971633,
+        "permissions": {
+          "edit_status": 0
+        }
+      }
+    }
+  ]
+}
