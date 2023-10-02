@@ -1,6 +1,6 @@
 # ISAC UAV Dataset
 
-A full, interactive documentation for the dataset is available [here](https://ems-tu-ilmenau.github.io/isac-uav-dataset/)!
+A full, interactive documentation for the dataset is available [here](https://ems-tu-ilmenau.github.io/isac-uav-dataset-docs/)!
 
 ## Introduction
 
