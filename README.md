@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/686893926.svg)](https://zenodo.org/badge/latestdoi/686893926)
+
 # ISAC UAV Dataset
 
 A full, interactive documentation for the dataset is available [here](https://ems-tu-ilmenau.github.io/isac-uav-dataset-docs/)!
