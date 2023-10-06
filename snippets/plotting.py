@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
+import argparse
 matplotlib.use('webagg')
 
 __author__ = "steffen.schieler@tu-ilmenau.de, FG EMS"
@@ -117,6 +118,8 @@ def update_fig(fig: plt.Figure, ax: plt.Axes, channel: np.ndarray, groundtruth: 
     ax.imshow(20*np.log10(np.abs(channel)), aspect="auto",
               cmap="inferno", vmin=-80, vmax=0, extent=[0, 16e-6, +1/(2*320e-6), -1/(2*320e-6)])
     ax.plot(groundtruth[0], groundtruth[1], **MARKER_STYLE)
+    ax.set_xlabel("Delay [$\mu s$]")
+    ax.set_ylabel("Doppler-Shift [Hz]")
     fig.canvas.draw_idle()
     return fig, ax
 
@@ -125,15 +128,12 @@ def update(fig: plt.Figure, ax: plt.Axes, channel: np.ndarray, groundtruth: np.n
     channel_window, groundtruth_window = get_data(
         channel, groundtruth, window_slowtime, start_idx)
     update_fig(fig, ax, channel_window, groundtruth_window)
-
-
-if __name__ == "__main__":
-    channel_file = "1to2_H15_V11_VGH0_channel.h5"
-    target_file = "1to2_H15_V11_VGH0_target.h5"
-    dataset = UAVDataset(channel_file, target_file)
+    
+def main(args):
+    dataset = UAVDataset(args.channel_file, args.target_file)
     channel = dataset.channel
     groundtruth = dataset.groundtruth
-    window_slowtime = 100
+    window_slowtime = args.window
     num_windows = (channel.shape[0] - window_slowtime) // window_slowtime
 
     fig, ax = plt.subplots(
@@ -143,8 +143,6 @@ if __name__ == "__main__":
         gridspec_kw={"width_ratios": [0.05, 1, 0.05]}
     )
     update(fig, ax[1], channel, groundtruth, window_slowtime, 0)
-    ax[1].set_xlabel("Delay [$\mu s$]")
-    ax[1].set_ylabel("Doppler-Shift [Hz]")
     cbar = plt.colorbar(ax[1].get_images()[0],
                         cax=ax[2], orientation="vertical")
     cbar.set_label("Normalized Power [dB]")
@@ -160,3 +158,26 @@ if __name__ == "__main__":
     sample_slider.on_changed(lambda slider_value: update(
         fig, ax[1], channel, groundtruth, window_slowtime, slider_value*window_slowtime))
     plt.show()
+
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Plotting script for the UAV dataset."
+    )
+    parser.add_argument(
+        "-c", "--channel-file", help="Path to the channel file.", default="1to2_H15_V11_VGH0_channel.h5",
+    )
+    parser.add_argument(
+        "-t", "--target-file", help="Path to the target file.", default="1to2_H15_V11_VGH0_target.h5",
+    )    
+    parser.add_argument(
+        "-w",
+        "--window",
+        help="Length of the slow time window.",
+        type=int,
+        default=100,
+    )
+    args = parser.parse_args()
+    
+    main(args)
