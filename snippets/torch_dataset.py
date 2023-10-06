@@ -6,7 +6,7 @@ from torch.utils.data import Dataset, DataLoader
 
 __author__ = "steffen.schieler@tu-ilmenau.de, FG EMS"
 __credits__ = "Zhixiang Zhao, Carsten Smeenk"
-__all__ = ["Dataset"]
+__all__ = ["UAVDataset", "TorchDataset"]
 
 # For an explanation of the following, see the PDF description in the repository
 H5_CDATA = "Channel/FrequencyResponses/Data"

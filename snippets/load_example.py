@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 
 __author__ = "steffen.schieler@tu-ilmenau.de, FG EMS"
 __credits__ = "Zhixiang Zhao, Carsten Smeenk"
-__all__ = ["Dataset"]
+__all__ = ["UAVDataset"]
 
 H5_CDATA = "Channel/FrequencyResponses/Data"
 H5_TARGET_DELAY = "TargetParameters/Delay/Data"
