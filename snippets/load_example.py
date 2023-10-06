@@ -1,6 +1,6 @@
 import h5py
 import numpy as np
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field    
 
 __author__ = "steffen.schieler@tu-ilmenau.de, FG EMS"
 __credits__ = "Zhixiang Zhao, Carsten Smeenk"
@@ -33,20 +33,20 @@ class UAVDataset:
     def __post_init__(self) -> None:
         # load channel, positions
         h5_channel = h5py.File(self.channelfile, "r")
-        self.channel = np.array(h5_channel[H5_CDATA]).squeeze()
+        self.channel = np.array(h5_channel[H5_CDATA]).view(np.complex64).squeeze()
         self.groundtruth = np.concatenate(
             (
                 np.array(h5_channel[H5_TARGET_DELAY]),
-                np.array(np.array(h5_channel[H5_TARGET_DOPPLER])),
+                np.array(h5_channel[H5_TARGET_DOPPLER]),
             ),
             axis=1,
         )
-        self.tx = np.array(h5_channel[H5_TXANTENNA]).squeeze()
-        self.rx = np.array(h5_channel[H5_RXANTENNA]).squeeze()
+        self.tx = np.array(h5_channel[H5_TXANTENNA]).view(np.float64).squeeze()
+        self.rx = np.array(h5_channel[H5_RXANTENNA]).view(np.float64).squeeze()
         
         if self.targetfile is not None:
             h5_target = h5py.File(self.targetfile, "r")
-            self.uav = np.array(h5_target[H5_UAVPOSITIONS]).squeeze()
+            self.uav = np.array(h5_target[H5_UAVPOSITIONS]).view(np.float64).squeeze()
         
         return
 
@@ -64,8 +64,8 @@ class UAVDataset:
            """
 
 if __name__ == "__main__":
-    channel_file = "1to2_H15_V11_VGH0_channel.h5"
-    target_file = "1to2_H15_V11_VGH0_target.h5"
+    channel_file = "0to1_H15_V5_VGH0_channel.h5"
+    target_file = "0to1_H15_V5_VGH0_target.h5"
     
     dataset = UAVDataset(channel_file, target_file)
     print(dataset)

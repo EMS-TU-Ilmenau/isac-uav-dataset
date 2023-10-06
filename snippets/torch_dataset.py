@@ -34,30 +34,28 @@ class UAVDataset:
     """Property to store the UAV positions as a numpy array"""
     
     def __post_init__(self) -> None:
+        # load channel, positions
         h5_channel = h5py.File(self.channelfile, "r")
-        self.channel = np.array(h5_channel[H5_CDATA]).squeeze()
+        self.channel = np.array(h5_channel[H5_CDATA]).view(np.complex64).squeeze()
         self.groundtruth = np.concatenate(
             (
                 np.array(h5_channel[H5_TARGET_DELAY]),
-                np.array(np.array(h5_channel[H5_TARGET_DOPPLER])),
+                np.array(h5_channel[H5_TARGET_DOPPLER]),
             ),
             axis=1,
         )
-        self.tx = np.array(h5_channel[H5_TXANTENNA]).squeeze()
-        self.rx = np.array(h5_channel[H5_RXANTENNA]).squeeze()
+        self.tx = np.array(h5_channel[H5_TXANTENNA]).view(np.float64).squeeze()
+        self.rx = np.array(h5_channel[H5_RXANTENNA]).view(np.float64).squeeze()
         
         if self.targetfile is not None:
             h5_target = h5py.File(self.targetfile, "r")
-            self.uav = np.array(h5_target[H5_UAVPOSITIONS]).squeeze()
-                    
+            self.uav = np.array(h5_target[H5_UAVPOSITIONS]).view(np.float64).squeeze()
+        
         return
-    
-    def __len__(self) -> int:
-        return self.channel.shape[0]
 
     def __str__(self) -> str:
         return f"""
-           ---- Dataset Summary ----    
+           ---- Dataset Summary ----           
            Channel: \t\t{self.channel.shape}
            Groundtruth: \t{self.groundtruth.shape}
            Antenna Positions: \t{'Loaded' if self.tx is not None else 'Not Loaded'}
@@ -67,7 +65,6 @@ class UAVDataset:
            \t - Channel: {self.channelfile}
            \t - Target: {self.targetfile}
            """
-
 
 class TorchDataset(Dataset):
     def __init__(self, dataset: UAVDataset, t_window: int = 100, return_uavpos: bool = False):
