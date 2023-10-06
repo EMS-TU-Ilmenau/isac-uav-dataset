@@ -128,7 +128,8 @@ def update(fig: plt.Figure, ax: plt.Axes, channel: np.ndarray, groundtruth: np.n
     channel_window, groundtruth_window = get_data(
         channel, groundtruth, window_slowtime, start_idx)
     update_fig(fig, ax, channel_window, groundtruth_window)
-    
+
+
 def main(args):
     dataset = UAVDataset(args.channel_file, args.target_file)
     channel = dataset.channel
@@ -160,7 +161,6 @@ def main(args):
     plt.show()
 
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Plotting script for the UAV dataset."
@@ -170,7 +170,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "-t", "--target-file", help="Path to the target file.", default="1to2_H15_V11_VGH0_target.h5",
-    )    
+    )
     parser.add_argument(
         "-w",
         "--window",
@@ -179,5 +179,5 @@ if __name__ == "__main__":
         default=100,
     )
     args = parser.parse_args()
-    
+
     main(args)
