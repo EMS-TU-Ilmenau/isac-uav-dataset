@@ -69,7 +69,8 @@ python downloader.py --help
 We provide two examples how to work with the dataset in the `snippets` folder.
 - `snippets/load_example.py` demonstrates how to load the dataset from the `*.h5` files into Python. It provides a `Dataset`-class that can also be used in other scripts.
 - `snippets/torch_dataset.py` demonstrates how to use the `Dataset`-class to create a PyTorch `Dataset` for training a neural network.
-- `snippets/delay_doppler_plot.py` demonstrates how to use the `Dataset`-class to plot a Delay-Doppler Map with the groundtruth of the UAV position.
+- `snippets/plot_receiver.py` demonstrates how to use the `Dataset`-class to plot a Delay-Doppler Map with the groundtruth of the UAV position for a single receiver.
+- `snippets/plot_scenario.py` demonstrates how to use the `Dataset`-class to plot a Delay-Doppler Map with the groundtruth of the UAV position all three receivers.
 
 ### Example 1: Working with `*.h5`
 The provided `UAVDataset`-class can be used to load the dataset from the `*.h5` files into Python.
