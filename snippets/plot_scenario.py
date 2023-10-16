@@ -85,30 +85,26 @@ class UAVDataset:
            
     def __len__(self) -> int:
         return self.channel.shape[0]
+    
+# def fft_upsample(x: np.ndarray, factor: int) -> np.ndarray:
+#     x_n, y_n = x.shape
+#     X = np.fft.ifft(np.fft.fft(x, axis=1), axis=0)
+#     return np.fft.fft(np.fft.ifft(X, axis=1, n=factor*y_n), axis=0, n=factor*x_n)
 
-
-def get_channel(x: np.ndarray, start_idx: int, window_slowtime: int) -> np.ndarray:
-    if start_idx > x.shape[0] - window_slowtime:
-        raise ValueError(
-            "Start index must be smaller than the number of slowtime samples minus the window size.")
-
-    x = x[start_idx:start_idx+window_slowtime, :]
-    y = np.fft.fftshift(np.fft.fft(np.fft.ifft(x, axis=1), axis=0), axes=0)
-    y /= np.linalg.norm(y)
-    y = y[:, :80]
-
-    return y
-
-def get_channel_clutter_filter(x: np.ndarray, start_idx: int, window_slowtime: int) -> np.ndarray:
+def get_channel(x: np.ndarray, start_idx: int, window_slowtime: int, filter_clutter: bool=False, upsample: int = 1) -> np.ndarray:
     if start_idx > x.shape[0] - window_slowtime:
         raise ValueError(
             "Start index must be smaller than the number of slowtime samples minus the window size.")
         
     x = x[start_idx:start_idx+window_slowtime+1, :]
-    x = np.diff(x, n=1, axis=0)
-    y = np.fft.fftshift(np.fft.fft(np.fft.ifft(x, axis=1), axis=0), axes=0)
+    if filter_clutter:
+        x = np.diff(x, n=1, axis=0)
+    
+    t_n, f_n = x.shape 
+    y = np.fft.fft(np.fft.ifft(x, n=f_n*upsample, axis=1), n=t_n*upsample, axis=0)
     y /= np.linalg.norm(y)
-    y = y[:, :80]
+    y = np.fft.fftshift(y, axes=0)
+    y = y[:, :80*upsample]
     
     return y
 
@@ -124,16 +120,14 @@ def get_groundtruth(x: np.ndarray, start_idx: int, window_slowtime: int):
 
 
 def get_data(channel: np.ndarray, groundtruth: np.ndarray, window_slowtime: int, start_idx: int):
-    channel = get_channel(channel, start_idx, window_slowtime)
-    # channel = get_channel_clutter_filter(channel, start_idx, window_slowtime)
+    channel = get_channel(channel, start_idx, window_slowtime, filter_clutter=True, upsample=2)
     groundtruth = get_groundtruth(groundtruth, start_idx, window_slowtime)
     return channel, groundtruth
-
 
 def update_fig(fig: plt.Figure, ax: plt.Axes, channel: np.ndarray, groundtruth: np.ndarray):
     ax.clear()
     ax.imshow(20*np.log10(np.abs(channel)), aspect="auto",
-              cmap="inferno", vmin=-100, vmax=0, extent=[0, 1e-6, +1/(2*320e-6), -1/(2*320e-6)])
+              cmap="inferno", vmin=-60, vmax=0, extent=[0, 1e-6, +1/(2*320e-6), -1/(2*320e-6)])
     ax.plot(groundtruth[0], groundtruth[1], **MARKER_STYLE)
     ax.set_xlabel("Delay [$\mu s$]")
     ax.set_ylabel("Doppler-Shift [Hz]")
@@ -170,9 +164,12 @@ def main(args):
         1, 5,
         figsize=(10, 5),
         tight_layout=True,
-        gridspec_kw={"width_ratios": [0.05, 1, 1, 1, 0.05]}
+        gridspec_kw={"width_ratios": [0.05, 1, 1, 1, 0.05]},
     )
     update_all(fig, ax[1:4], channel, groundtruth, window_slowtime, 0)
+    ax[1].set_title("VGH0")
+    ax[2].set_title("VGH1")
+    ax[3].set_title("VGH2")
     cbar = plt.colorbar(ax[1].get_images()[0],
                         cax=ax[-1], orientation="vertical")
     cbar.set_label("Normalized Power [dB]")
