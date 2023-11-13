@@ -80,13 +80,17 @@ Such an example can be found in `snippets/plot_receiver.py` and `snippets/plot_s
 Here is an example for the `plot_receiver.py` script (creates 1 interactive plot):
 
 ```python
-python plot_receiver.py --channel-file 0to1_H15_V5_VGH0_channel.h5 --target-file 0to1_H15_V5_VGH0_target.h5
+python plot_receiver.py --channel-file 1to2_H15_V11_VGH0_channel.h5 --target-file 1to2_H15_V11_VGH0_target.h5
 ```
+
+The result is an interactive plot with a slider on the left side. 
+A red circle marks the UAV (computed from the RTK groundtruth).  
+<img src=".media/scenario_1to2_H15_V11_VGH0.png" alt="Example" style="width:800px;"/>
 
 Here is an example for the `plot_scenario.py` script (creates 3 interactive plots):
 
 ```python
-python plot_scenario.py --scenario 0to1_H15_V5
+python plot_scenario.py --scenario 1to2_H15_V11
 ```
 
 **Note** that by default, the `plot_scenario.py` also applies a Pulse-Pair Processing step (window length of 1) to subtract static clutter.
