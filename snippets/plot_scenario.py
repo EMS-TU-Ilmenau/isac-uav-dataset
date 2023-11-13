@@ -129,7 +129,7 @@ def update_fig(fig: plt.Figure, ax: plt.Axes, channel: np.ndarray, groundtruth: 
     ax.imshow(20*np.log10(np.abs(channel)), aspect="auto",
               cmap="inferno", vmin=-60, vmax=0, extent=[0, 1e-6, +1/(2*320e-6), -1/(2*320e-6)])
     ax.plot(groundtruth[0], groundtruth[1], **MARKER_STYLE)
-    ax.set_xlabel("Delay [$\mu s$]")
+    ax.set_xlabel("Delay [$s$]")
     ax.set_ylabel("Doppler-Shift [Hz]")
     fig.canvas.draw_idle()
     return fig, ax
