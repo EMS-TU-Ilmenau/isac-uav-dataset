@@ -67,12 +67,32 @@ python downloader.py --help
 
 ## How to use the dataset
 We provide two examples how to work with the dataset in the `snippets` folder.
-- `snippets/load_example.py` demonstrates how to load the dataset from the `*.h5` files into Python. It provides a `Dataset`-class that can also be used in other scripts.
-- `snippets/torch_dataset.py` demonstrates how to use the `Dataset`-class to create a PyTorch `Dataset` for training a neural network.
 - `snippets/plot_receiver.py` demonstrates how to use the `Dataset`-class to plot a Delay-Doppler Map with the groundtruth of the UAV position for a single receiver.
 - `snippets/plot_scenario.py` demonstrates how to use the `Dataset`-class to plot a Delay-Doppler Map with the groundtruth of the UAV position all three receivers.
+- `snippets/load_example.py` demonstrates how to load the dataset from the `*.h5` files into Python. It provides a `Dataset`-class that can also be used in other scripts.
+- `snippets/torch_dataset.py` demonstrates how to use the `Dataset`-class to create a PyTorch `Dataset` for training a neural network.
 
-### Example 1: Working with `*.h5`
+
+### Example 1: Plotting Delay-Doppler Map with UAV Groundtruth (Delay-Doppler Maps)
+A simple demonstration of the dataset is to plot the Delay-Doppler Map for a single or multiple receivers. 
+Such an example can be found in `snippets/plot_receiver.py` and `snippets/plot_scenario.py`.
+
+Here is an example for the `plot_receiver.py` script (creates 1 interactive plot):
+
+```python
+python plot_receiver.py --channel-file 0to1_H15_V5_VGH0_channel.h5 --target-file 0to1_H15_V5_VGH0_target.h5
+```
+
+Here is an example for the `plot_scenario.py` script (creates 3 interactive plots):
+
+```python
+python plot_scenario.py --scenario 0to1_H15_V5
+```
+
+**Note** that by default, the `plot_scenario.py` also applies a Pulse-Pair Processing step (window length of 1) to subtract static clutter.
+
+
+### Example 2: Working with `*.h5`
 The provided `UAVDataset`-class can be used to load the dataset from the `*.h5` files into Python.
 ```python
 channel_file = "1to2_H15_V11_VGH0_channel.h5"
@@ -91,7 +111,7 @@ Available properties are:
 
 Check the implementation of the class in `snippets/load_example.py` to learn more about the available properties.
 
-### Example 2: Creating a PyTorch `Dataset`
+### Example 3: Creating a PyTorch `Dataset`
 The provided `UAVDataset`-class can be used to create a PyTorch `Dataset` for training a neural network.
 ```python
 class TorchDataset(Dataset):
@@ -146,18 +166,6 @@ dataloader = DataLoader(
 ```
 
 Check the provided file `snippets/torch_dataset.py` to learn more about the available options.
-
-### Example 3: Plotting Delay-Doppler Map with UAV Groundtruth (RADAR)
-You need to use `-p` and specify the `.h5` data files, namely channel dataset and target dataset, which should be placed in the main folder.    
-```
-python postprocessing.py -c channel.h5 -t target.h5 -p
-```
-
-**Optional: Slice the channel**  
-You can also slice the channel using `-s` by giving three idx: idx_snapshot idx_Tx idx_Rx
-```
-python postprocessing.py -c channel.h5 -t target.h5 -s idx_snapshot idx_Tx idx_Rx
-```
 
 ## License
 This dataset (and all remote files associated with it) is licensed under the [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode) License.
