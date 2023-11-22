@@ -1,22 +1,15 @@
-import h5py
 import numpy as np
-from dataclasses import dataclass, field
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 import argparse
+from uavdataset import UAVDataset
 matplotlib.use('webagg')
 
 __author__ = "steffen.schieler@tu-ilmenau.de, FG EMS"
 __credits__ = "Zhixiang Zhao, Carsten Smeenk"
 __all__ = ["UAVDataset"]
 
-H5_CDATA = "Channel/FrequencyResponses/Data"
-H5_TARGET_DELAY = "TargetParameters/Delay/Data"
-H5_TARGET_DOPPLER = "TargetParameters/Doppler/Data"
-H5_TXANTENNA = "AntennaPositions/PositionTx/Data"
-H5_RXANTENNA = "AntennaPositions/PositionRx/Data"
-H5_UAVPOSITIONS = "Positions/Data"
 
 MARKER_STYLE = dict(
     linestyle="none",
@@ -31,65 +24,15 @@ MARKER_STYLE = dict(
 )
 
 
-@dataclass
-class UAVDataset:
-    channelfile: str
-    """The path to the channel file"""
-    targetfile: str = None
-    """The path to the target file"""
-    channel: np.ndarray = field(init=False)
-    """Property to store the channel data as a numpy array"""
-    groundtruth: np.ndarray = field(init=False)
-    """Property to store the delay and Doppler groundtruth of the UAV as a numpy array"""
-    tx: np.ndarray = field(init=False)
-    """Property to store the transmitter antenna positions as a numpy array"""
-    rx: np.ndarray = field(init=False)
-    """Property to store the receiver antenna positions as a numpy array"""
-    uav: np.ndarray = field(init=False)
-    """Property to store the UAV positions as a numpy array"""
-
-    def __post_init__(self) -> None:
-        # load channel, positions
-        h5_channel = h5py.File(self.channelfile, "r")
-        self.channel = np.array(h5_channel[H5_CDATA]).view(
-            np.complex64).squeeze()
-        self.groundtruth = np.concatenate(
-            (
-                np.array(h5_channel[H5_TARGET_DELAY]),
-                np.array(h5_channel[H5_TARGET_DOPPLER]),
-            ),
-            axis=1,
-        )
-        self.tx = np.array(h5_channel[H5_TXANTENNA]).view(np.float64).squeeze()
-        self.rx = np.array(h5_channel[H5_RXANTENNA]).view(np.float64).squeeze()
-
-        if self.targetfile is not None:
-            h5_target = h5py.File(self.targetfile, "r")
-            self.uav = np.array(h5_target[H5_UAVPOSITIONS]).view(
-                np.float64).squeeze()
-
-        return
-
-    def __str__(self) -> str:
-        return f"""
-           ---- Dataset Summary ----           
-           Channel: \t\t{self.channel.shape}
-           Groundtruth: \t{self.groundtruth.shape}
-           Antenna Positions: \t{'Loaded' if self.tx is not None else 'Not Loaded'}
-           UAV Positions: \t{'Loaded' if self.uav is not None else 'Not Loaded'}
-           
-           From Files: 
-           \t - Channel: {self.channelfile}
-           \t - Target: {self.targetfile}
-           """
-
-
-def get_channel(x: np.ndarray, start_idx: int, window_slowtime: int) -> np.ndarray:
+def get_channel(x: np.ndarray, start_idx: int, window_slowtime: int, filter_clutter: bool=False) -> np.ndarray:
     if start_idx > x.shape[0] - window_slowtime:
         raise ValueError(
             "Start index must be smaller than the number of slowtime samples minus the window size.")
 
     x = x[start_idx:start_idx+window_slowtime, :]
+    if filter_clutter:
+        x = np.diff(x, n=1, axis=0)
+        
     y = np.fft.fftshift(np.fft.fft(np.fft.ifft(x, axis=1), axis=0), axes=0)
     y /= np.linalg.norm(y)
 
@@ -122,6 +65,7 @@ def update_fig(fig: plt.Figure, ax: plt.Axes, channel: np.ndarray, groundtruth: 
     ax.set_ylabel("Doppler-Shift [Hz]")
     fig.canvas.draw_idle()
     return fig, ax
+
 
 def update(fig: plt.Figure, ax: plt.Axes, channel: np.ndarray, groundtruth: np.ndarray, window_slowtime: int, start_idx: int):
     channel_window, groundtruth_window = get_data(
