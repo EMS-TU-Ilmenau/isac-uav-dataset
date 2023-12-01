@@ -8,7 +8,7 @@ A full, interactive documentation for the dataset is available [here](https://em
 
 This repository contains scripts and code demos to work with the ISAC UAV Dataset from the EMS Group at TU Ilmenau.
 Please note that due to large filesizes of the dataset, this repository does not contain the actual dataset.
-Instead, the files are downloaded by the code in the `downlaoder.py` in this repository. 
+Instead, the files are downloaded by the code in the `downloader.py` in this repository. 
 The [documentation](https://ems-tu-ilmenau.github.io/isac-uav-dataset-docs/) explains the download process in detail.
 
 To get the password, drop us a short email with your name, affiliation, and a short explanation how you want to use the dataset:
